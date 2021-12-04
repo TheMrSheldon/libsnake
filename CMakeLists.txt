@@ -13,7 +13,7 @@ include(FetchContent)
 include(CTest)
 enable_testing()
 
-add_library(libsnake SHARED src/state_api.cpp src/state.cpp)
+add_library(libsnake SHARED src/libsnake_api.cpp src/state.cpp src/eval.cpp)
 
 include_directories(PUBLIC include)
 

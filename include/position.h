@@ -10,6 +10,12 @@ struct Position final {
     inline bool operator==(const Position& other) const noexcept {
         return x == other.x && y == other.y;
     }
+    inline Position operator+(const Position& other) const noexcept {
+        return Position(x + other.x, y + other.y);
+    }
+    inline Position operator-(const Position& other) const noexcept {
+        return Position(x - other.x, y - other.y);
+    }
 
     inline Position after_move(const Move& move) const noexcept {
         return Position(x + isRight(move) - isLeft(move), y + isDown(move) - isUp(move));

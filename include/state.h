@@ -50,5 +50,8 @@ public:
     Move getPossibleActions(unsigned snake) const noexcept;
     State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 
+    const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
+    const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
+
     bool isFoodAt(const Position& pos) const noexcept;
 };

@@ -31,6 +31,8 @@ public:
     inline const Move& getDirection() const noexcept { return direction; }
     inline const int& getHealth() const noexcept { return health; }
 
+    inline const std::vector<Position>& getBody() const noexcept { return body; }
+
     inline Snake afterMove(const Move& move, bool hasEaten, bool dead) const noexcept {
         if (dead)
             return Snake(std::vector<Position>(), move, 0);
