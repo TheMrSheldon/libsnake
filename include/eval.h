@@ -6,7 +6,8 @@
 #include <vector>
 
 struct SnakeEval {
-    float mobility;
+    unsigned mobility;
+    float mobility_per_area;
     unsigned health;
     unsigned foodInReach;
 };
@@ -19,12 +20,14 @@ struct Evaluation {
 class Evaluator final {
 private:
     const uint scan_radius = 4;
+    const uint scan_area_width = 2*scan_radius+1;
     const uint field_in_radius = (scan_radius * (scan_radius+1) * 2);
 
     std::vector<uint8_t> envbuffer;
 
-    void scanProximity(const State& state, Evaluation& results) noexcept;
-    uint8_t& getEnvBuffEntry(const Position& pos) noexcept;
+    inline void scanProximity(const State& state, Evaluation& results) noexcept;
+    inline bool isInEnvBuff(const Position& pos) const noexcept;
+    inline uint8_t& getEnvBuffEntry(const Position& pos) noexcept;
 
     Evaluator(const Evaluator& other) = delete;
     Evaluator& operator=(const Evaluator& other) = delete;

@@ -52,6 +52,8 @@ public:
 
     const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
     const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
+    unsigned getWidth() const noexcept { return width; }
+    unsigned getHeight() const noexcept { return height; }
 
     bool isFoodAt(const Position& pos) const noexcept;
 };
