@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <deque>
 
-Evaluator::Evaluator() noexcept : envbuffer(scan_radius) {}
+Evaluator::Evaluator() noexcept : envbuffer(scan_radius*scan_radius) {}
 
 Evaluation Evaluator::evaluate(const State& state) noexcept {
     Evaluation result;
