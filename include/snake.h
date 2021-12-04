@@ -32,7 +32,7 @@ public:
     inline const int& getHealth() const noexcept { return health; }
 
     inline Snake afterMove(const Move& move, bool hasEaten, bool dead) const noexcept {
-        if (!dead)
+        if (dead)
             return Snake(std::vector<Position>(), move, 0);
         const std::size_t newLength = body.size() + hasEaten;
         std::vector<Position> newbody(newLength);

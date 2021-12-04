@@ -7,6 +7,18 @@
 #include <vector>
 #include <memory>
 
+/**
+ * @brief The winner enum class works as a flag. If the game is not over, no bit is set (Winner::None).
+ * If the game was won by Player1, the first bit is set (Winner::Player1), if the game was won by Player2,
+ * the second bit is set (Winner::Player2). If both players one, both these bits are set (Winner::Tie).
+ */
+enum class Winner : unsigned char {
+    None = 0,
+    Player1 = 1,
+    Player2 = 2,
+    Tie = static_cast<unsigned char>(Player1) | static_cast<unsigned char>(Player1)
+};
+
 class State final {
 private:
     const unsigned width;
@@ -33,6 +45,8 @@ private:
 public:
     State(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) noexcept;
     bool isGameOver() const noexcept;
+    Winner getWinner() const noexcept;
+
     Move getPossibleActions(unsigned snake) const noexcept;
     State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 
