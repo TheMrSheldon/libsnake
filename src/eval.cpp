@@ -37,8 +37,8 @@ void Evaluator::scanProximity(const State& state, Evaluation& results) noexcept 
     for (const auto& tail : state.getSnake(1).getBody())
         getEnvBuffEntry(tail - snake2Pos) &= 2;
     for (const auto&  food : state.getFood()) {
-        getEnvBuffEntry(food - snake1Pos) &= 3;
-        getEnvBuffEntry(food - snake2Pos) &= 4;
+        getEnvBuffEntry(food - snake1Pos) &= 4;
+        getEnvBuffEntry(food - snake2Pos) &= 8;
     }
 
     // Scan the environment
