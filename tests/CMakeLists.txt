@@ -6,7 +6,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(catch)
 
 add_executable(tests main.cpp state.cpp move.cpp eval.cpp)
-target_compile_features(tests PRIVATE cxx_std_20)
+#target_compile_features(tests PRIVATE cxx_std_20)
 
 target_link_libraries(tests PRIVATE libsnake Catch2::Catch2)
 

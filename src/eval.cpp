@@ -33,7 +33,7 @@ uint8_t& Evaluator::getEnvBuffEntry(const Position& pos) noexcept {
     return envbuffer[pos.x + scan_area_width*pos.y];
 }
 
-__attribute__((optimize("unroll-loops")))
+UNROLL
 void Evaluator::scanProximity(const State& state, Evaluation& results) noexcept {
     struct PosStr {
         Position pos;
@@ -65,7 +65,7 @@ void Evaluator::scanProximity(const State& state, Evaluation& results) noexcept 
             getEnvBuffEntry(food - snake2Pos + middle) |= 8;
     }
     // Additionally block the border of the bord of:
-    for (uint snake = 0; snake < 2; ++snake) {
+    for (uint32_t snake = 0; snake < 2; ++snake) {
         const uint8_t bit = 1<<snake;
         const auto& snakePos = state.getSnake(snake).getHeadPos();
         if (snakePos.x < scan_radius)
@@ -84,7 +84,7 @@ void Evaluator::scanProximity(const State& state, Evaluation& results) noexcept 
     //
 
     // Scan the environment
-    for (uint snake = 0; snake < 2; ++snake) {
+    for (uint32_t snake = 0; snake < 2; ++snake) {
         const uint8_t bit = 0b1<<snake;
         const uint8_t foodbit = 0b100<<snake;
         std::deque<PosStr> frontier = {PosStr{middle, scan_radius}};

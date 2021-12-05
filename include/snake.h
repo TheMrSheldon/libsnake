@@ -7,12 +7,17 @@
 
 struct PosArray {
     Position* data;
-    unsigned length;
+    std::size_t length;
+
+    PosArray(Position* data, std::size_t length) : data(data), length(length) {}
+    PosArray(std::vector<Position>& vector) : PosArray(vector.data(), vector.size()) {}
 };
 struct SnakeData {
     struct PosArray body;
     Move direction;
     unsigned health;
+
+    SnakeData(PosArray body, Move direction, unsigned health) : body(body), direction(direction), health(health) {}
 };
 
 class Snake final {
@@ -26,7 +31,7 @@ public:
     Snake(SnakeData data) noexcept : body(data.body.data, data.body.data+data.body.length), direction(data.direction), health(data.health) {}
 
     inline const Position& getHeadPos() const noexcept { return body[0];}
-    inline const unsigned length() const noexcept { return body.size(); }
+    inline const std::size_t length() const noexcept { return body.size(); }
 
     inline const Move& getDirection() const noexcept { return direction; }
     inline const int& getHealth() const noexcept { return health; }

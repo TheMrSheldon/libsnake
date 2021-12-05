@@ -18,9 +18,9 @@ TEST_CASE("State1", "[Evaluation]") {
     std::vector<Position> snake1 = {{3,1},{4,1},{5,1},{5,2},{5,3},{4,3},{3,3},{2,3},{1,3}};
     std::vector<Position> snake2 = {{7,2},{7,3},{7,4},{7,5}};
     std::vector<Position> food = {{8,0},{1,1},{5,4},{4,5}};
-    auto sdata1 = SnakeData({snake1.data(), (uint)snake1.size()}, MoveLeft, 82);
-    auto sdata2 = SnakeData({snake2.data(), (uint)snake2.size()}, MoveUp, 19);
-    auto state = State(9,6, sdata1, sdata2, {food.data(), (uint)food.size()});
+    auto sdata1 = SnakeData({snake1.data(), (uint32_t)snake1.size()}, MoveLeft, 82);
+    auto sdata2 = SnakeData({snake2.data(), (uint32_t)snake2.size()}, MoveUp, 19);
+    auto state = State(9,6, sdata1, sdata2, {food.data(), (uint32_t)food.size()});
 
     //Assert correct evaluation
     Evaluator evaluator;

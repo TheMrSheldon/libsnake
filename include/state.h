@@ -2,6 +2,7 @@
 
 #include "move.h"
 #include "snake.h"
+#include "definitions.h"
 
 #include <array>
 #include <vector>
@@ -43,17 +44,17 @@ private:
      */
     State(const State& other, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept;
 public:
-    State(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) noexcept;
-    bool isGameOver() const noexcept;
-    Winner getWinner() const noexcept;
+    DLLEXPORT State(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) noexcept;
+    DLLEXPORT bool isGameOver() const noexcept;
+    DLLEXPORT Winner getWinner() const noexcept;
 
-    Move getPossibleActions(unsigned snake) const noexcept;
-    State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
+    DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;
+    DLLEXPORT State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 
     const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
     const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
     unsigned getWidth() const noexcept { return width; }
     unsigned getHeight() const noexcept { return height; }
 
-    bool isFoodAt(const Position& pos) const noexcept;
+    DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 };

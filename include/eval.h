@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state.h"
+#include "definitions.h"
 
 #include <inttypes.h>
 #include <vector>
@@ -19,9 +20,9 @@ struct Evaluation {
 
 class Evaluator final {
 private:
-    const uint scan_radius = 4;
-    const uint scan_area_width = 2*scan_radius+1;
-    const uint field_in_radius = (scan_radius * (scan_radius+1) * 2);
+    const uint32_t scan_radius = 4;
+    const uint32_t scan_area_width = 2*scan_radius+1;
+    const uint32_t field_in_radius = (scan_radius * (scan_radius+1) * 2);
 
     std::vector<uint8_t> envbuffer;
 
@@ -32,7 +33,7 @@ private:
     Evaluator(const Evaluator& other) = delete;
     Evaluator& operator=(const Evaluator& other) = delete;
 public:
-    Evaluator() noexcept;
+    DLLEXPORT Evaluator() noexcept;
 
-    Evaluation evaluate(const State& state) noexcept;
+    DLLEXPORT Evaluation evaluate(const State& state) noexcept;
 };

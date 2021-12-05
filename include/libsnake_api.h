@@ -5,11 +5,7 @@
 #include "position.h"
 #include "eval.h"
 
-#ifdef _WIN32
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT
-#endif
+#include "definitions.h"
 
 extern "C" {
     DLLEXPORT State* State_new(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food);
