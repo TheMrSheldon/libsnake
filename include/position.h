@@ -10,6 +10,9 @@ struct Position final {
     inline bool operator==(const Position& other) const noexcept {
         return x == other.x && y == other.y;
     }
+    inline bool operator!=(const Position& other) const noexcept {
+        return x != other.x || y != other.y;
+    }
     inline Position operator+(const Position& other) const noexcept {
         return Position(x + other.x, y + other.y);
     }

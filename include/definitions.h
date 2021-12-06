@@ -5,7 +5,7 @@
 #endif
 
 #ifdef __GNUC__
-#define UNROLL  __attribute__((optimize("unroll-loops")))
+#define UNROLL __attribute__((optimize("unroll-loops")))
 #else
 #define UNROLL
 #endif

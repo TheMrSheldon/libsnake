@@ -51,10 +51,8 @@ public:
     DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;
     DLLEXPORT State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 
-    const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
-    const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
-    unsigned getWidth() const noexcept { return width; }
-    unsigned getHeight() const noexcept { return height; }
-
-    DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
+    inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
+    inline const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
+    inline unsigned getWidth() const noexcept { return width; }
+    inline unsigned getHeight() const noexcept { return height; }
 };

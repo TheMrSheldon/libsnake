@@ -42,7 +42,8 @@ public:
         if (dead)
             return Snake(std::vector<Position>(), move, 0);
         const std::size_t newLength = body.size() + hasEaten;
-        std::vector<Position> newbody(newLength);
+        std::vector<Position> newbody;
+        newbody.reserve(newLength);
         newbody.emplace_back(getHeadPos().after_move(move));
         for (std::size_t i = 0; i < body.size()-!hasEaten; ++i)
             newbody.emplace_back(body[i]);
