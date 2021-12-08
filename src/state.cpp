@@ -1,5 +1,7 @@
 #include "state.h"
 
+#include "util.h"
+
 #include <algorithm>
 #include <stdio.h>
 
@@ -47,8 +49,8 @@ State* State::afterAction(Move snake1Action, Move snake2Action) const noexcept {
     const auto& snake2 = snakes[1];
     const auto newHead1 = snake1.getHeadPos().after_move(snake1Action);
     const auto newHead2 = snake2.getHeadPos().after_move(snake2Action);
-    const bool eaten1 = std::find(foodPositions->begin(), foodPositions->end(), newHead1) != foodPositions->end();
-    const bool eaten2 = std::find(foodPositions->begin(), foodPositions->end(), newHead2) != foodPositions->end();
+    const bool eaten1 = isFoodAt(newHead1);
+    const bool eaten2 = isFoodAt(newHead2);
     const bool collision = newHead1 == newHead2;
     const bool starve1 = !eaten1 && snake1.getHealth() <= 1;
     const bool starve2 = !eaten2 && snake2.getHealth() <= 1;
@@ -59,4 +61,17 @@ State* State::afterAction(Move snake1Action, Move snake2Action) const noexcept {
     const bool dead1 = starve1 || collision1 || wall1;
     const bool dead2 = starve2 || collision2 || wall2;
     return new State(*this, snake1Action, snake2Action, eaten1, eaten2, dead1, dead2);
+}
+
+std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {
+    std::size_t index = 0;
+    for (; index < snakes.size(); ++index) {
+        if (utl::contains(snakes[index].getBody(), pos))
+            return index;
+    }
+    return index;
+}
+
+bool State::isFoodAt(const Position& pos) const noexcept {
+    return utl::contains(*foodPositions, pos);
 }

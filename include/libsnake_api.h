@@ -13,6 +13,7 @@ extern "C" {
     DLLEXPORT bool State_isGameOver(const State* state);
     DLLEXPORT Move State_getPossibleActions(const State* state, unsigned snake);
     DLLEXPORT State* State_afterAction(const State* state, Move snake1Action, Move snake2Action);
+    DLLEXPORT void State_print(const State* state);
 
     DLLEXPORT Evaluator* Evaluator_new();
     DLLEXPORT void Evaluator_free(Evaluator* eval);
