@@ -21,6 +21,13 @@ constexpr bool isDown(const Move& move) {
     return move & MoveDown;
 }
 
+constexpr int deltaX(const Move& move) {
+    return isRight(move) - isLeft(move);
+}
+constexpr int deltaY(const Move& move) {
+    return isUp(move) - isDown(move);
+}
+
 constexpr Move opposite(const Move& move) {
     // Rotate input-bits right by 2
     return ((move >> 2) | (move << 2)) & MoveMask;

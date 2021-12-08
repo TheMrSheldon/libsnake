@@ -5,42 +5,52 @@
 TEST_CASE("General Move Caes", "[Moves]") {
     {
         auto move = MoveUp;
-        REQUIRE(isUp(move));
-        REQUIRE_FALSE(isLeft(move));
-        REQUIRE_FALSE(isRight(move));
-        REQUIRE_FALSE(isDown(move));
-        REQUIRE(opposite(move) == MoveDown);
+        CHECK(isUp(move));
+        CHECK_FALSE(isLeft(move));
+        CHECK_FALSE(isRight(move));
+        CHECK_FALSE(isDown(move));
+        CHECK(opposite(move) == MoveDown);
+        CHECK(deltaX(move) == 0);
+        CHECK(deltaY(move) == 1);
     }
     {
         auto move = MoveDown;
-        REQUIRE_FALSE(isUp(move));
-        REQUIRE_FALSE(isLeft(move));
-        REQUIRE_FALSE(isRight(move));
-        REQUIRE(isDown(move));
-        REQUIRE(opposite(move) == MoveUp);
+        CHECK_FALSE(isUp(move));
+        CHECK_FALSE(isLeft(move));
+        CHECK_FALSE(isRight(move));
+        CHECK(isDown(move));
+        CHECK(opposite(move) == MoveUp);
+        CHECK(deltaX(move) == 0);
+        CHECK(deltaY(move) == -1);
     }
     {
         auto move = MoveLeft;
-        REQUIRE_FALSE(isUp(move));
-        REQUIRE(isLeft(move));
-        REQUIRE_FALSE(isRight(move));
-        REQUIRE_FALSE(isDown(move));
-        REQUIRE(opposite(move) == MoveRight);
+        CHECK_FALSE(isUp(move));
+        CHECK(isLeft(move));
+        CHECK_FALSE(isRight(move));
+        CHECK_FALSE(isDown(move));
+        CHECK(opposite(move) == MoveRight);
+        CHECK(deltaX(move) == -1);
+        CHECK(deltaY(move) == 0);
     }
     {
         auto move = MoveRight;
-        REQUIRE_FALSE(isUp(move));
-        REQUIRE_FALSE(isLeft(move));
-        REQUIRE(isRight(move));
-        REQUIRE_FALSE(isDown(move));
-        REQUIRE(opposite(move) == MoveLeft);
+        CHECK_FALSE(isUp(move));
+        CHECK_FALSE(isLeft(move));
+        CHECK(isRight(move));
+        CHECK_FALSE(isDown(move));
+        CHECK(opposite(move) == MoveLeft);
+        CHECK(deltaX(move) == 1);
+        CHECK(deltaY(move) == 0);
     }
     {
         auto move = MoveUp | MoveRight;
-        REQUIRE(isUp(move));
-        REQUIRE_FALSE(isLeft(move));
-        REQUIRE(isRight(move));
-        REQUIRE_FALSE(isDown(move));
-        REQUIRE(opposite(move) == (MoveDown | MoveLeft));
+        CHECK(isUp(move));
+        CHECK_FALSE(isLeft(move));
+        CHECK(isRight(move));
+        CHECK_FALSE(isDown(move));
+        CHECK(opposite(move) == (MoveDown | MoveLeft));
+        CHECK(deltaX(move) == 1);
+        CHECK(deltaY(move) == 1);
     }
 }

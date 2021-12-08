@@ -21,6 +21,6 @@ struct Position final {
     }
 
     inline Position after_move(const Move& move) const noexcept {
-        return Position(x + isRight(move) - isLeft(move), y + isDown(move) - isUp(move));
+        return Position(x + deltaX(move), y + deltaY(move));
     }
 };

@@ -57,28 +57,9 @@ public:
     inline const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
     inline unsigned getWidth() const noexcept { return width; }
     inline unsigned getHeight() const noexcept { return height; }
+    DLLEXPORT bool isInBounds(const Position& pos) const noexcept;
     DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos) const noexcept;
     DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 
-    inline void print(std::ostream& out) const noexcept {
-        out << std::string(2*getWidth()+3, '#') << std::endl;
-        for (unsigned y = 0; y < getHeight(); ++y) {
-            out << "# ";
-            for (unsigned x = 0; x < getWidth(); ++x) {
-                char c = '.';
-                if (isFoodAt({x, y}))
-                    c = 'o';
-                else {
-                    auto snake = getSnakeIndexAt({x,y});
-                    if (snake >= snakes.size())
-                        c = '.';
-                    else
-                        c = std::to_string(snake+1)[0];
-                }
-                out << c << ' ';
-            }
-            out << "#" << std::endl;
-        }
-        out << std::string(2*getWidth()+3, '#') << std::endl;
-    }
+    DLLEXPORT void print(std::ostream& out) const noexcept;
 };

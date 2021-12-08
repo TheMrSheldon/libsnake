@@ -56,11 +56,15 @@ State* State::afterAction(Move snake1Action, Move snake2Action) const noexcept {
     const bool starve2 = !eaten2 && snake2.getHealth() <= 1;
     const bool collision1 = collision && snake1.length() <= snake2.length();
     const bool collision2 = collision && snake2.length() <= snake1.length();
-    const bool wall1 = newHead1.x < 0 || newHead1.y < 0 || newHead1.x >= width || newHead1.y >= height;
-    const bool wall2 = newHead2.x < 0 || newHead2.y < 0 || newHead2.x >= width || newHead2.y >= height;
+    const bool wall1 = !isInBounds(newHead1);
+    const bool wall2 = !isInBounds(newHead2);
     const bool dead1 = starve1 || collision1 || wall1;
     const bool dead2 = starve2 || collision2 || wall2;
     return new State(*this, snake1Action, snake2Action, eaten1, eaten2, dead1, dead2);
+}
+
+bool State::isInBounds(const Position& pos) const noexcept {
+    return pos.x >= 0 && pos.y >= 0 && pos.x < getWidth() && pos.y < getHeight();
 }
 
 std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {
@@ -74,4 +78,26 @@ std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {
 
 bool State::isFoodAt(const Position& pos) const noexcept {
     return utl::contains(*foodPositions, pos);
+}
+
+void State::print(std::ostream& out) const noexcept {
+    out << std::string(2*getWidth()+3, '#') << std::endl;
+    for (unsigned y = 1; y <= getHeight(); ++y) {
+        out << "# ";
+        for (unsigned x = 0; x < getWidth(); ++x) {
+            char c = '.';
+            if (isFoodAt({x, getHeight()-y}))
+                c = 'o';
+            else {
+                auto snake = getSnakeIndexAt({x,getHeight()-y});
+                if (snake >= snakes.size())
+                    c = '.';
+                else
+                    c = std::to_string(snake+1)[0];
+            }
+            out << c << ' ';
+        }
+        out << "#" << std::endl;
+    }
+    out << std::string(2*getWidth()+3, '#') << std::endl;
 }
