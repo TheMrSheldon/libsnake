@@ -1,7 +1,7 @@
-#include "state.h"
+#include <libsnake/state.h>
 
-#include "util.h"
-#include "gamemodes/duel.h"
+#include <libsnake/util.h>
+#include <libsnake/gamemodes/duel.h>
 
 #include <algorithm>
 #include <stdio.h>
@@ -43,6 +43,10 @@ Move State::getPossibleActions(unsigned snake) const noexcept {
 
 bool State::isInBounds(const Position& pos) const noexcept {
     return pos.x >= 0 && pos.y >= 0 && pos.x < getWidth() && pos.y < getHeight();
+}
+
+bool State::isBlocked(const Position& pos) const noexcept {
+    return !isInBounds(pos) || getSnakeIndexAt(pos) < snakes.size();
 }
 
 std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {

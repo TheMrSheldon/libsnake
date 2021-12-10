@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include <state.h>
-#include <gamemodes/duel.h>
+#include <libsnake/state.h>
+#include <libsnake/gamemodes/duel.h>
 
 using namespace ls;
 
@@ -177,8 +177,8 @@ TEST_CASE("State COW 1 (food)", "[Gamemode Duel]") {
     CHECK(state1.getPossibleActions(0) == (MoveUp | MoveLeft | MoveDown));
     CHECK(state1.getPossibleActions(1) == (MoveDown | MoveLeft | MoveRight));
     CHECK(state1.getFood().size() == 2);
-    {// - If snake1 moves down and snake2 moves up: cow should not create a new food-list
-        auto next = gamemode.stepState(state1, {MoveUp, MoveUp});
+    {// - If snake1 moves up and snake2 moves down: cow should not create a new food-list
+        auto next = gamemode.stepState(state1, {MoveUp, MoveDown});
         CHECK(!gamemode.isGameOver(next));
         CHECK(gamemode.getWinner(next) == Winner::None);
         CHECK(&next.getFood() == &state1.getFood());

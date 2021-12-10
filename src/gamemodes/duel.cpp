@@ -1,6 +1,6 @@
-#include "gamemodes/duel.h"
+#include <libsnake/gamemodes/duel.h>
 
-#include "state.h"
+#include <libsnake/state.h>
 
 #include <algorithm>
 
@@ -22,21 +22,19 @@ State DuelGamemode::stepState(const State& state, const std::array<Move, 2>& mov
     const auto newHead2 = snake2.getHeadPos().after_move(moves[1]);
     const bool eaten1 = state.isFoodAt(newHead1);
     const bool eaten2 = state.isFoodAt(newHead2);
-    const bool collision = newHead1 == newHead2;
+    const bool headtohead = newHead1 == newHead2;
     const bool starve1 = !eaten1 && snake1.getHealth() <= 1;
     const bool starve2 = !eaten2 && snake2.getHealth() <= 1;
-    const bool collision1 = collision && snake1.length() <= snake2.length();
-    const bool collision2 = collision && snake2.length() <= snake1.length();
-    const bool wall1 = !state.isInBounds(newHead1);
-    const bool wall2 = !state.isInBounds(newHead2);
-    const bool dead1 = starve1 || collision1 || wall1;
-    const bool dead2 = starve2 || collision2 || wall2;
+    const bool headtohead1 = headtohead && snake1.length() <= snake2.length();
+    const bool headtohead2 = headtohead && snake2.length() <= snake1.length();
+    const bool wall1 = state.isBlocked(newHead1);
+    const bool wall2 = state.isBlocked(newHead2);
+    const bool dead1 = starve1 || headtohead1 || wall1;
+    const bool dead2 = starve2 || headtohead2 || wall2;
     return State(state, moves[0], moves[1], eaten1, eaten2, dead1, dead2);
 }
 
 Winner DuelGamemode::getWinner(const State& state) const noexcept {
-    auto& p1Health = state.getSnake(0).getHealth();
-    auto& p2Health = state.getSnake(1).getHealth();
-    auto winflags = ((p1Health <= 0)*Winner::Player2) | ((p2Health <= 0)*Winner::Player1);
+    auto winflags = (state.getSnake(0).isDead()*Winner::Player2) | (state.getSnake(1).isDead()*Winner::Player1);
     return Winner(winflags);
 }

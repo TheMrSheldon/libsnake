@@ -1,4 +1,4 @@
-#include "winner.h"
+#include <libsnake/winner.h>
 
 using namespace ls;
 

@@ -45,6 +45,7 @@ public:
     inline unsigned getWidth() const noexcept { return width; }
     inline unsigned getHeight() const noexcept { return height; }
     DLLEXPORT bool isInBounds(const Position& pos) const noexcept;
+    DLLEXPORT bool isBlocked(const Position& pos) const noexcept;
     DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos) const noexcept;
     DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 

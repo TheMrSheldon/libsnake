@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "move.h"
+#include <libsnake/move.h>
 
 TEST_CASE("General Move Caes", "[Moves]") {
     {

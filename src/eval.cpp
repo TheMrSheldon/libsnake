@@ -1,6 +1,6 @@
-#include "eval.h"
+#include <libsnake/eval.h>
 
-#include "gamemodes/duel.h"
+#include <libsnake/gamemodes/duel.h>
 
 #include <algorithm>
 #include <deque>

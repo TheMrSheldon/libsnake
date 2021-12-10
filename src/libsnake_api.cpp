@@ -1,6 +1,6 @@
-#include "libsnake_api.h"
+#include <libsnake/libsnake_api.h>
 
-#include "gamemodes/duel.h"
+#include <libsnake/gamemodes/duel.h>
 
 #include <iostream>
 
