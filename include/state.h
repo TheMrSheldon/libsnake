@@ -3,30 +3,18 @@
 #include "move.h"
 #include "snake.h"
 #include "definitions.h"
+#include "winner.h"
 
-#include <array>
 #include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
 
-/**
- * @brief The winner enum class works as a flag. If the game is not over, no bit is set (Winner::None).
- * If the game was won by Player1, the first bit is set (Winner::Player1), if the game was won by Player2,
- * the second bit is set (Winner::Player2). If both players one, both these bits are set (Winner::Tie).
- */
-enum class Winner : unsigned char {
-    None = 0,
-    Player1 = 1,
-    Player2 = 2,
-    Tie = static_cast<unsigned char>(Player1) | static_cast<unsigned char>(Player1)
-};
-
 class State final {
 private:
     const unsigned width;
     const unsigned height;
-    const std::array<const Snake, 2> snakes;
+    const std::vector<Snake> snakes;
     const std::shared_ptr<const std::vector<Position>> foodPositions;
     
     /**
@@ -46,12 +34,9 @@ private:
      */
     State(const State& other, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept;
 public:
-    DLLEXPORT State(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) noexcept;
-    DLLEXPORT bool isGameOver() const noexcept;
-    DLLEXPORT Winner getWinner() const noexcept;
+    DLLEXPORT State(unsigned width, unsigned height, std::vector<SnakeData> snakes, PosArray food) noexcept;
 
     DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;
-    DLLEXPORT State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 
     inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
     inline const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
@@ -62,4 +47,9 @@ public:
     DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 
     DLLEXPORT void print(std::ostream& out) const noexcept;
+
+    //TODO: remove in favor of the Gamemode API
+    DLLEXPORT bool isGameOver() const noexcept;
+    DLLEXPORT Winner getWinner() const noexcept;
+    DLLEXPORT State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 };

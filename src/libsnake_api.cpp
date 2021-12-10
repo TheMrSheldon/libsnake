@@ -3,7 +3,7 @@
 #include <iostream>
 
 State* State_new(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) {
-    return new State(width, height, snake1, snake2, food);
+    return new State(width, height, {snake1, snake2}, food);
 }
 void State_free(State* state) { delete state; }
 bool State_isGameOver(const State* state) { return state->isGameOver(); }

@@ -15,7 +15,7 @@ TEST_CASE("State progression 1 (no food)", "[States]") {
     std::vector<Position> food = {};
     auto sdata1 = SnakeData(snake1, MoveLeft, 100);
     auto sdata2 = SnakeData(snake2, MoveDown, 100);
-    auto state1 = State(3,3, sdata1, sdata2, food);
+    auto state1 = State(3,3, {sdata1, sdata2}, food);
 
     // Testcases:
     // - Assert correct initialization
@@ -66,7 +66,7 @@ TEST_CASE("State progression 2 (food;starving)", "[States]") {
     std::vector<Position> food = {{2,0},{1,1}};
     auto sdata1 = SnakeData(snake1, MoveLeft, 1);
     auto sdata2 = SnakeData(snake2, MoveDown, 100);
-    auto state1 = State(3,3, sdata1, sdata2, food);
+    auto state1 = State(3,3, {sdata1, sdata2}, food);
 
     // Testcases:
     // - Assert correct initialization
@@ -121,7 +121,7 @@ TEST_CASE("State progression 3 (death by wall)", "[States]") {
     std::vector<Position> food = {};
     auto sdata1 = SnakeData(snake1, MoveDown, 100);
     auto sdata2 = SnakeData(snake2, MoveUp, 100);
-    auto state1 = State(3,3, sdata1, sdata2, food);
+    auto state1 = State(3,3, {sdata1, sdata2}, food);
 
     // Testcases:
     // - Assert correct initialization
@@ -181,7 +181,7 @@ TEST_CASE("State COW 1 (food)", "[States]") {
     std::vector<Position> food = {{2,0},{1,1}};
     auto sdata1 = SnakeData(snake1, MoveLeft, 100);
     auto sdata2 = SnakeData(snake2, MoveDown, 100);
-    auto state1 = State(3,3, sdata1, sdata2, food);
+    auto state1 = State(3,3, {sdata1, sdata2}, food);
 
     // Testcases:
     // - Assert correct initialization

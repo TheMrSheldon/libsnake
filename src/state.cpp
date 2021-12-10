@@ -18,8 +18,16 @@ inline static std::shared_ptr<const std::vector<Position>> CopyIfUnchanged(const
     return food;
 }
 
-State::State(unsigned width, unsigned height, SnakeData snake1, SnakeData snake2, PosArray food) noexcept
-    : width(width), height(height), snakes({snake1, snake2}),
+inline static std::vector<Snake> FromSnakeData(const std::vector<SnakeData>& data) noexcept {
+    std::vector<Snake> snakes;
+    snakes.reserve(data.size());
+    for (const auto& sd : data)
+        snakes.emplace_back(Snake(sd));
+    return snakes;
+}
+
+State::State(unsigned width, unsigned height, std::vector<SnakeData> snakes, PosArray food) noexcept
+    : width(width), height(height), snakes(FromSnakeData(snakes)),
     foodPositions(std::make_shared<const std::vector<Position>>(food.data, food.data+food.length)) {}
 
 State::State(const State& prev, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept

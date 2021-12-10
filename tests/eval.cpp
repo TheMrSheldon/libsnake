@@ -20,7 +20,7 @@ TEST_CASE("State1", "[Evaluation]") {
     std::vector<Position> food = {{8,0},{1,1},{5,4},{4,5}};
     auto sdata1 = SnakeData({snake1.data(), (uint32_t)snake1.size()}, MoveLeft, 82);
     auto sdata2 = SnakeData({snake2.data(), (uint32_t)snake2.size()}, MoveDown, 19);
-    auto state = State(9,6, sdata1, sdata2, {food.data(), (uint32_t)food.size()});
+    auto state = State(9,6, {sdata1, sdata2}, {food.data(), (uint32_t)food.size()});
 
     //Assert correct evaluation
     Evaluator evaluator;
