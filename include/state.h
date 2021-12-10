@@ -17,6 +17,7 @@ private:
     const std::vector<Snake> snakes;
     const std::shared_ptr<const std::vector<Position>> foodPositions;
     
+public:
     /**
      * @brief Construct a new State object by "stepping" the provided state using the given information.
      * The created state will have the two snakes moved using the provided action. If either snake has
@@ -38,6 +39,7 @@ public:
 
     DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;
 
+    inline const std::vector<Snake>& getSnakes() const noexcept { return snakes; }
     inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
     inline const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
     inline unsigned getWidth() const noexcept { return width; }
@@ -47,9 +49,4 @@ public:
     DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 
     DLLEXPORT void print(std::ostream& out) const noexcept;
-
-    //TODO: remove in favor of the Gamemode API
-    DLLEXPORT bool isGameOver() const noexcept;
-    DLLEXPORT Winner getWinner() const noexcept;
-    DLLEXPORT State* afterAction(Move snake1Action, Move snake2Action) const noexcept;
 };

@@ -4,6 +4,8 @@
 
 #include <vector>
 
+using namespace ls;
+
 TEST_CASE("State1", "[Evaluation]") {
     /**
      * ╔═══════════════════╗    Snake 1:    <11

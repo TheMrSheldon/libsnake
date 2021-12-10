@@ -10,9 +10,12 @@ namespace ls {
     private:
         Gamemode(const Gamemode& other) = delete;
         Gamemode& operator=(const Gamemode& other) = delete;
+    protected:
+        Gamemode() noexcept = default;
+        virtual ~Gamemode() = default;
     public:
-        virtual bool isGameOver(const State& state) const noexcept;
-        virtual Winner getWinner(const State& state) const noexcept;
-        virtual State stepState(const State& state, const std::array<Move, NSnakes>& moves) const noexcept;
+        virtual bool isGameOver(const State& state) const noexcept = 0;
+        virtual Winner getWinner(const State& state) const noexcept = 0;
+        virtual State stepState(const State& state, const std::array<Move, NSnakes>& moves) const noexcept = 0;
     };
 }

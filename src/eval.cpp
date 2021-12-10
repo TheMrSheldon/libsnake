@@ -1,5 +1,7 @@
 #include "eval.h"
 
+#include "gamemodes/duel.h"
+
 #include <algorithm>
 #include <deque>
 
@@ -17,8 +19,8 @@ Evaluator::Evaluator() noexcept : envbuffer(scan_area_width*scan_area_width) {}
 
 Evaluation Evaluator::evaluate(const State& state) noexcept {
     Evaluation result;
-    result.winner = state.getWinner();
-    if (!state.isGameOver()) {
+    result.winner = ls::gm::Duel.getWinner(state);
+    if (!ls::gm::Duel.isGameOver(state)) {
         result.snakes[0].health = state.getSnake(0).getHealth();
         result.snakes[1].health = state.getSnake(1).getHealth();
         scanProximity(state, result);

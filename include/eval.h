@@ -2,6 +2,7 @@
 
 #include "state.h"
 #include "definitions.h"
+#include "winner.h"
 
 #include <inttypes.h>
 #include <vector>
@@ -14,7 +15,7 @@ struct SnakeEval {
 };
 
 struct Evaluation {
-    Winner winner;
+    ls::Winner winner;
     SnakeEval snakes[2];
 };
 

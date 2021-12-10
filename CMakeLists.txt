@@ -13,7 +13,7 @@ include(FetchContent)
 include(CTest)
 enable_testing()
 
-add_library(libsnake SHARED src/libsnake_api.cpp src/state.cpp src/eval.cpp src/gamemodes/duel.cpp)
+add_library(libsnake SHARED src/libsnake_api.cpp src/state.cpp src/eval.cpp src/winner.cpp src/gamemodes/duel.cpp)
 
 include_directories(PUBLIC include)
 

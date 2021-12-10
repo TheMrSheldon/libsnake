@@ -30,6 +30,7 @@ private:
 public:
     Snake(SnakeData data) noexcept : body(data.body.data, data.body.data+data.body.length), direction(data.direction), health(data.health) {}
 
+    inline const bool isDead() const noexcept { return getHealth() <= 0; }
     inline const Position& getHeadPos() const noexcept { return body[0];}
     inline const std::size_t length() const noexcept { return body.size(); }
 

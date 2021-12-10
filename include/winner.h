@@ -1,12 +1,37 @@
 #pragma once
-/**
- * @brief The winner enum class works as a flag. If the game is not over, no bit is set (Winner::None).
- * If the game was won by Player1, the first bit is set (Winner::Player1), if the game was won by Player2,
- * the second bit is set (Winner::Player2). If both players one, both these bits are set (Winner::Tie).
- */
-enum class Winner : unsigned char {
-    None = 0,
-    Player1 = 1,
-    Player2 = 2,
-    Tie = static_cast<unsigned char>(Player1) | static_cast<unsigned char>(Player1)
-};
+
+#include <inttypes.h>
+#include <cstddef>
+
+namespace ls {
+
+    constexpr static uint8_t ByIndex(std::size_t index) noexcept {
+        return 1<<index;
+    }
+
+    class Winner final {
+    public:
+        using snakes = uint8_t;
+        
+        constexpr static snakes None = 0;
+        constexpr static snakes Player1 = ByIndex(1);
+        constexpr static snakes Player2 = ByIndex(2);
+        constexpr static snakes Player3 = ByIndex(3);
+        constexpr static snakes Player4 = ByIndex(4);
+    private:
+        snakes winner_flags;
+    
+    public:
+        constexpr Winner(snakes flags = None) noexcept : winner_flags(flags) {}
+        constexpr bool containsAny(snakes snakes) {
+            return (winner_flags & snakes) != None;
+        }
+        constexpr bool containsAll(snakes snakes) {
+            return (winner_flags & snakes) == snakes;
+        }
+
+        constexpr bool operator==(const snakes& other) const noexcept {
+            return other == winner_flags;
+        }
+    };
+}
