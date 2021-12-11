@@ -9,6 +9,8 @@ using namespace ls::gm;
 
 DuelGamemode ls::gm::Duel;
 
+DuelGamemode::DuelGamemode() noexcept {}
+
 bool DuelGamemode::isGameOver(const State& state) const noexcept {
     return std::count_if(state.getSnakes().begin(), state.getSnakes().end(), [](const Snake& snake){return !snake.isDead();}) <= 1;
 }

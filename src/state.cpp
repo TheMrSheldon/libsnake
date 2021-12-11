@@ -6,8 +6,10 @@
 #include <algorithm>
 #include <stdio.h>
 
-inline static std::shared_ptr<const std::vector<Position>> CopyIfUnchanged(const std::shared_ptr<const std::vector<Position>>& food, bool gameover, bool eaten1, bool eaten2, const Position& head1, const Position& head2) {
+inline static std::shared_ptr<const std::vector<Position>> CopyIfUnchanged(const std::shared_ptr<const std::vector<Position>>& food, bool gameover, bool eaten1, bool eaten2, const Snake& snake1, const Snake& snake2) {
     if ((eaten1 || eaten2) && !gameover) {
+        const auto& head1 = snake1.getHeadPos();
+        const auto& head2 = snake2.getHeadPos();
         auto copy = std::vector<Position>();
         copy.reserve(food->size()-1);
         for (const auto& pos : *food) {
@@ -34,7 +36,7 @@ State::State(unsigned width, unsigned height, std::vector<SnakeData> snakes, Pos
 State::State(const State& prev, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept
     : width(prev.width), height(prev.height),
     snakes({prev.snakes[0].afterMove(move1, eaten1, kill1), prev.snakes[1].afterMove(move2, eaten2, kill2)}),
-    foodPositions(CopyIfUnchanged(prev.foodPositions, ls::gm::Duel.isGameOver(*this), eaten1, eaten2, snakes[0].getHeadPos(), snakes[1].getHeadPos())) {}
+    foodPositions(CopyIfUnchanged(prev.foodPositions, ls::gm::Duel.isGameOver(*this), eaten1, eaten2, getSnake(0), getSnake(1))) {}
 
 Move State::getPossibleActions(unsigned snake) const noexcept {
     auto& dir = snakes[snake].getDirection();

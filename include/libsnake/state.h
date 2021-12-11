@@ -35,6 +35,8 @@ public:
      */
     State(const State& other, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept;
 public:
+    DLLEXPORT State(State&& other) : width(other.width), height(other.height), snakes(std::move(other.snakes)), foodPositions(std::move(other.foodPositions)) {}
+    DLLEXPORT State(const State& other) : width(other.width), height(other.height), snakes(other.snakes), foodPositions(other.foodPositions) {}
     DLLEXPORT State(unsigned width, unsigned height, std::vector<SnakeData> snakes, PosArray food) noexcept;
 
     DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;

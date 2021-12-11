@@ -14,6 +14,8 @@ include(CTest)
 enable_testing()
 
 add_library(libsnake SHARED src/libsnake_api.cpp src/state.cpp src/eval.cpp src/winner.cpp src/gamemodes/duel.cpp)
+target_compile_features(libsnake PRIVATE cxx_std_20)
+target_compile_definitions(libsnake PRIVATE BUILD_SHARED)
 
 include_directories(PUBLIC include)
 
