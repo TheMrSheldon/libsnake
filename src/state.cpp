@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <stdio.h>
 
+using namespace ls;
+
 inline static std::shared_ptr<const std::vector<Position>> CopyIfUnchanged(const std::shared_ptr<const std::vector<Position>>& food, bool gameover, bool eaten1, bool eaten2, const Snake& snake1, const Snake& snake2) {
     if ((eaten1 || eaten2) && !gameover) {
         const auto& head1 = snake1.getHeadPos();
@@ -32,6 +34,10 @@ inline static std::vector<Snake> FromSnakeData(const std::vector<SnakeData>& dat
 State::State(unsigned width, unsigned height, std::vector<SnakeData> snakes, PosArray food) noexcept
     : width(width), height(height), snakes(FromSnakeData(snakes)),
     foodPositions(std::make_shared<const std::vector<Position>>(food.data, food.data+food.length)) {}
+	
+State::State(unsigned width, unsigned height, std::vector<Snake>& snakes, std::vector<Position>& food) noexcept
+    : width(width), height(height), snakes(std::move(snakes)),
+    foodPositions(std::make_shared<const std::vector<Position>>(std::move(food))) {}
 
 State::State(const State& prev, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept
     : width(prev.width), height(prev.height),
