@@ -26,8 +26,23 @@ private:
     const Move direction;
     const int health;
 
+	static Move getDirection(const std::vector<Position>& body) {
+		if (body.size() <= 1)
+			return 0;
+		if (body[0].x > body[1].x)
+			return MoveRight;
+		if (body[0].x < body[1].x)
+			return MoveLeft;
+		if (body[0].y > body[1].y)
+			return MoveUp;
+		if (body[0].y < body[1].y)
+			return MoveDown;
+		return 0;
+	}
+
 public:
     Snake(std::vector<Position>&& body, Move direction, int health) noexcept : body(std::move(body)), direction(direction), health(health) {}
+    Snake(std::vector<Position>&& body, int health) noexcept : body(std::move(body)), direction(getDirection(this->body)), health(health) {}
     Snake(SnakeData data) noexcept : body(data.body.data, data.body.data+data.body.length), direction(data.direction), health(data.health) {}
 
     inline const bool isDead() const noexcept { return getHealth() <= 0; }
