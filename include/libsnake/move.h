@@ -63,6 +63,10 @@ namespace ls {
             return Move(((flags >> 2) | (flags << 2)) & Move::mask);
         }
 
+		constexpr inline unsigned size() const noexcept {
+			return isUp() + isDown() + isLeft() + isRight();
+		}
+
         constexpr inline bool operator==(const Move& other) const noexcept {
             return flags == other.flags;
         }

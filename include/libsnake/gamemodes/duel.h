@@ -14,6 +14,8 @@ namespace ls::gm {
         DLLEXPORT bool isGameOver(const State& state) const noexcept override;
         DLLEXPORT Winner getWinner(const State& state) const noexcept override;
         DLLEXPORT State stepState(const State& state, const std::array<Move, 2>& moves) const noexcept override;
+
+		DLLEXPORT Move getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept override;
     };
 
     DLLEXPORT extern DuelGamemode Duel;

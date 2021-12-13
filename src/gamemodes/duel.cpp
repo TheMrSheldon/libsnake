@@ -40,3 +40,12 @@ Winner DuelGamemode::getWinner(const State& state) const noexcept {
     auto winflags = (state.getSnake(0).isDead()*Winner::Player2) | (state.getSnake(1).isDead()*Winner::Player1);
     return Winner(winflags);
 }
+
+Move DuelGamemode::getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept {
+	Move ret = Move::none;
+	const auto& snake = state.getSnake(snakeIdx);
+	for (const auto& move : state.getPossibleActions(snakeIdx))
+		if (!state.isBlocked(snake.getHeadPos().after_move(move)))
+			ret |= move;
+	return ret;
+}
