@@ -22,19 +22,22 @@ namespace ls {
         snakes winner_flags;
     
     public:
-        constexpr Winner(snakes flags = None) noexcept : winner_flags(flags) {}
-        constexpr bool containsAny(snakes snakes) {
+        constexpr inline Winner(snakes flags = None) noexcept : winner_flags(flags) {}
+        constexpr inline bool containsAny(snakes snakes) {
             return (winner_flags & snakes) != None;
         }
-        constexpr bool containsAll(snakes snakes) {
+        constexpr inline bool containsAll(snakes snakes) {
             return (winner_flags & snakes) == snakes;
         }
-        constexpr bool equals(snakes snakes) {
+        constexpr inline bool equals(snakes snakes) {
             return snakes == winner_flags;
         }
 
-        constexpr bool operator==(const snakes& other) const noexcept {
+        constexpr inline bool operator==(const snakes& other) const noexcept {
             return other == winner_flags;
+        }
+        constexpr inline bool operator!=(const snakes& other) const noexcept {
+            return other != winner_flags;
         }
     };
 }

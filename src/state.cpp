@@ -46,7 +46,7 @@ State::State(const State& prev, Move move1, Move move2, bool eaten1, bool eaten2
 
 Move State::getPossibleActions(unsigned snake) const noexcept {
     auto& dir = snakes[snake].getDirection();
-    return (~opposite(dir)) & MoveMask;
+    return ~dir.opposite();
 }
 
 bool State::isInBounds(const Position& pos) const noexcept {

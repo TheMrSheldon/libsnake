@@ -2,55 +2,67 @@
 
 #include <libsnake/move.h>
 
-TEST_CASE("General Move Caes", "[Moves]") {
+TEST_CASE("General Move Case", "[Moves]") {
     {
-        auto move = MoveUp;
-        CHECK(isUp(move));
-        CHECK_FALSE(isLeft(move));
-        CHECK_FALSE(isRight(move));
-        CHECK_FALSE(isDown(move));
-        CHECK(opposite(move) == MoveDown);
-        CHECK(deltaX(move) == 0);
-        CHECK(deltaY(move) == 1);
+        ls::Move move = ls::Move::up;
+        CHECK(move.isUp());
+        CHECK_FALSE(move.isLeft());
+        CHECK_FALSE(move.isRight());
+        CHECK_FALSE(move.isDown());
+        CHECK(move.opposite() == ls::Move::down);
+        CHECK(move.deltaX() == 0);
+        CHECK(move.deltaY() == 1);
     }
     {
-        auto move = MoveDown;
-        CHECK_FALSE(isUp(move));
-        CHECK_FALSE(isLeft(move));
-        CHECK_FALSE(isRight(move));
-        CHECK(isDown(move));
-        CHECK(opposite(move) == MoveUp);
-        CHECK(deltaX(move) == 0);
-        CHECK(deltaY(move) == -1);
+        ls::Move move = ls::Move::down;
+        CHECK_FALSE(move.isUp());
+        CHECK_FALSE(move.isLeft());
+        CHECK_FALSE(move.isRight());
+        CHECK(move.isDown());
+        CHECK(move.opposite() == ls::Move::up);
+        CHECK(move.deltaX() == 0);
+        CHECK(move.deltaY() == -1);
     }
     {
-        auto move = MoveLeft;
-        CHECK_FALSE(isUp(move));
-        CHECK(isLeft(move));
-        CHECK_FALSE(isRight(move));
-        CHECK_FALSE(isDown(move));
-        CHECK(opposite(move) == MoveRight);
-        CHECK(deltaX(move) == -1);
-        CHECK(deltaY(move) == 0);
+        ls::Move move = ls::Move::left;
+        CHECK_FALSE(move.isUp());
+        CHECK(move.isLeft());
+        CHECK_FALSE(move.isRight());
+        CHECK_FALSE(move.isDown());
+        CHECK(move.opposite() == ls::Move::right);
+        CHECK(move.deltaX() == -1);
+        CHECK(move.deltaY() == 0);
     }
     {
-        auto move = MoveRight;
-        CHECK_FALSE(isUp(move));
-        CHECK_FALSE(isLeft(move));
-        CHECK(isRight(move));
-        CHECK_FALSE(isDown(move));
-        CHECK(opposite(move) == MoveLeft);
-        CHECK(deltaX(move) == 1);
-        CHECK(deltaY(move) == 0);
+        ls::Move move = ls::Move::right;
+        CHECK_FALSE(move.isUp());
+        CHECK_FALSE(move.isLeft());
+        CHECK(move.isRight());
+        CHECK_FALSE(move.isDown());
+        CHECK(move.opposite() == ls::Move::left);
+        CHECK(move.deltaX() == 1);
+        CHECK(move.deltaY() == 0);
     }
     {
-        auto move = MoveUp | MoveRight;
-        CHECK(isUp(move));
-        CHECK_FALSE(isLeft(move));
-        CHECK(isRight(move));
-        CHECK_FALSE(isDown(move));
-        CHECK(opposite(move) == (MoveDown | MoveLeft));
-        CHECK(deltaX(move) == 1);
-        CHECK(deltaY(move) == 1);
+        ls::Move move = ls::Move::up | ls::Move::right;
+        CHECK(move.isUp());
+        CHECK_FALSE(move.isLeft());
+        CHECK(move.isRight());
+        CHECK_FALSE(move.isDown());
+        CHECK(move.opposite() == (ls::Move::down | ls::Move::left));
+        CHECK(move.deltaX() == 1);
+        CHECK(move.deltaY() == 1);
+    }
+}
+
+TEST_CASE("Iterating moves", "[Moves]") {
+    {
+        ls::Move moves = ls::Move::up | ls::Move::down;
+        std::vector<ls::Move> iterated;
+        for (const auto& move : moves)
+            iterated.push_back(move);
+        REQUIRE(iterated.size() == 2);
+        CHECK(iterated[0] == ls::Move::up);
+        CHECK(iterated[1] == ls::Move::down);
     }
 }
