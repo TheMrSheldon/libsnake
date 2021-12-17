@@ -3,6 +3,8 @@
 #include "position.h"
 #include "move.h"
 
+#include "definitions.h"
+
 #include <vector>
 
 namespace ls {
@@ -19,8 +21,12 @@ namespace ls {
 		}
 
 	public:
-		Snake(std::vector<Position>&& body, Move direction, int health) noexcept : body(std::move(body)), direction(direction), health(health) {}
-		Snake(std::vector<Position>&& body, int health) noexcept : body(std::move(body)), direction(getDirection(this->body)), health(health) {}
+		Snake(std::vector<Position>&& body, Move direction, int health) noexcept : body(std::move(body)), direction(direction), health(health) {
+			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
+		}
+		Snake(std::vector<Position>&& body, int health) noexcept : body(std::move(body)), direction(getDirection(this->body)), health(health) {
+			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
+		}
 
 		inline const bool isDead() const noexcept { return getHealth() <= 0; }
 		inline const Position& getHeadPos() const noexcept { return body[0];}
@@ -33,7 +39,7 @@ namespace ls {
 
 		inline Snake afterMove(const Move& move, bool hasEaten, bool dead) const noexcept {
 			if (dead)
-				return Snake(std::vector<Position>(), move, 0);
+				return Snake(std::vector<Position>(1, Position(-1, -1)), move, 0);
 			const std::size_t newLength = body.size() + hasEaten;
 			std::vector<Position> newbody;
 			newbody.reserve(newLength);
