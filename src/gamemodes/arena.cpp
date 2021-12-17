@@ -56,8 +56,11 @@ State ArenaGamemode::stepState(const State& state, const std::vector<Move>& move
 	}
 	if (foodChanged && !isGameOver(state)) {
 		Foods food = state.getFood().clone();
-		for (size_t i = 0; i < state.getSnakes().size(); ++i)
-			food.set(state.getSnake(i).getHeadPos().after_move(moves[i]), false);
+		for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+			const auto newPos = state.getSnake(i).getHeadPos().after_move(moves[i]);
+			if (state.isInBounds(newPos))
+				food.set(newPos, false);
+		}
 		return State(state.getWidth(), state.getHeight(), std::move(snakes), std::move(food));
 	}
 	return State(state.getWidth(), state.getHeight(), std::move(snakes), state.getFood());
