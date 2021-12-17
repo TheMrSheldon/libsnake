@@ -8,44 +8,50 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace ls {
+
+	class Foods final {
+	private:
+		const unsigned width;
+		const unsigned height;
+		std::shared_ptr<std::vector<uint8_t>> positions;
+
+	public:
+		DLLEXPORT Foods(unsigned width, unsigned height) noexcept;
+		DLLEXPORT Foods(unsigned width, unsigned height, std::vector<Position> pos) noexcept;
+		DLLEXPORT void set(const Position& p, bool value) noexcept;
+		DLLEXPORT void set(unsigned x, unsigned y, bool value) noexcept;
+		DLLEXPORT const bool get(unsigned x, unsigned y) const noexcept;
+		//DLLEXPORT bool& operator[](const Position& pos) noexcept;
+		DLLEXPORT const bool operator[](const Position& pos) const noexcept;
+		DLLEXPORT const size_t size() const noexcept;
+		DLLEXPORT Foods clone() const noexcept;
+
+		inline const std::vector<uint8_t>* __raw() const noexcept { return positions.get(); }
+	};
+
 	class State final {
 	private:
 		const unsigned width;
 		const unsigned height;
 		const std::vector<Snake> snakes;
-		const std::shared_ptr<const std::vector<Position>> foodPositions;
+		const Foods food;
 		
 	public:
-		/**
-		 * @brief Construct a new State object by "stepping" the provided state using the given information.
-		 * The created state will have the two snakes moved using the provided action. If either snake has
-		 * eaten (eaten1 or eaten2 respectively are set) the respective snake gets elongated. If either snake
-		 * was killed (kill1 or kill2 respectively) the according snake is set to 0 health.
-		 * 
-		 * @param other The previous state from which data is copied.
-		 * @param move1 The direction in which the first snake is moved for the new (this) state.
-		 * @param move2 The direction in which the second snake is moved for the new (this) state.
-		 * @param eaten1 True if the first snake has eaten after enacting move1 in transition to this state.
-		 * @param eaten2 True if the second snake has eaten after enacting move2 in transition to this state.
-		 * @param kill1 True if the first snake has died after enacting move1 in transition to this state.
-		 * @param kill2 True if the second snake has died after enacting move2 in transition to this state.
-		 * @see Snake::after_move()
-		 */
-		State(const State& other, Move move1, Move move2, bool eaten1, bool eaten2, bool kill1, bool kill2) noexcept;
-	public:
-		DLLEXPORT State(State&& other) : width(other.width), height(other.height), snakes(std::move(other.snakes)), foodPositions(std::move(other.foodPositions)) {}
-		DLLEXPORT State(const State& other) : width(other.width), height(other.height), snakes(other.snakes), foodPositions(other.foodPositions) {}
-		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>& snakes, std::vector<Position>& food) noexcept;
-		DLLEXPORT State(unsigned width, unsigned height, std::vector<SnakeData> snakes, PosArray food) noexcept;
+		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)) {}
+		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food) {}
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept;
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept;
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept;
 
-		DLLEXPORT Move getPossibleActions(unsigned snake) const noexcept;
+		DLLEXPORT Move getPossibleActions(size_t snake) const noexcept;
 
 		inline const std::vector<Snake>& getSnakes() const noexcept { return snakes; }
 		inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
-		inline const std::vector<Position>& getFood() const noexcept { return *foodPositions; }
+		inline const Foods& getFood() const noexcept { return food; }
 		inline unsigned getWidth() const noexcept { return width; }
 		inline unsigned getHeight() const noexcept { return height; }
 		DLLEXPORT bool isInBounds(const Position& pos) const noexcept;
