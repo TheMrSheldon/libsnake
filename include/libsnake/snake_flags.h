@@ -43,6 +43,9 @@ namespace ls {
 			flags &= other.flags;
 			return *this;
 		}
+        constexpr inline SnakeFlags operator&(const SnakeFlags& other) noexcept {
+			return SnakeFlags(flags & other.flags);
+		}
 
 		constexpr inline SnakeFlags operator~() const noexcept {
 			return SnakeFlags(~flags);
