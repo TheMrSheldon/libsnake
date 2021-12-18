@@ -15,7 +15,7 @@ namespace ls {
 		virtual ~Gamemode() = default;
 	public:
 		virtual bool isGameOver(const State& state) const noexcept = 0;
-		virtual Winner getWinner(const State& state) const noexcept = 0;
+		virtual SnakeFlags getWinner(const State& state) const noexcept = 0;
 		virtual State stepState(const State& state, const std::vector<Move>& moves) const noexcept = 0;
 		
 		virtual Move getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept = 0;

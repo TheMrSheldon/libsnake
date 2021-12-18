@@ -3,7 +3,7 @@
 #include "move.h"
 #include "snake.h"
 #include "definitions.h"
-#include "winner.h"
+#include "snake_flags.h"
 
 #include <memory>
 #include <ostream>

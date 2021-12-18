@@ -17,12 +17,12 @@ bool ArenaGamemode::isGameOver(const State& state) const noexcept {
 	return std::count_if(state.getSnakes().begin(), state.getSnakes().end(), [](const Snake& snake){return !snake.isDead();}) <= 1;
 }
 
-Winner ArenaGamemode::getWinner(const State& state) const noexcept {
-	Winner winner = Winner::FromTo(0, state.getSnakes().size());
+SnakeFlags ArenaGamemode::getWinner(const State& state) const noexcept {
+	SnakeFlags winner = SnakeFlags::FromTo(0, state.getSnakes().size());
 	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
 		const auto& snake = state.getSnake(i);
 		if (!snake.isDead())
-			winner &= Winner::ByIndex(i);
+			winner &= SnakeFlags::ByIndex(i);
 	}
 	return winner;
 }
