@@ -26,10 +26,10 @@ namespace ls {
 		constexpr static primitive Player8 = 1<<7;
 
         constexpr inline SnakeFlags(primitive flags = None) noexcept : flags(flags) {}
-		constexpr inline bool containsAny(primitive snakes) {
+		constexpr inline bool containsAny(primitive snakes) const noexcept {
 			return (flags & snakes) != None;
 		}
-		constexpr inline bool containsAll(primitive snakes) {
+		constexpr inline bool containsAll(primitive snakes) const noexcept {
 			return (flags & snakes) == snakes;
 		}
 
@@ -43,12 +43,29 @@ namespace ls {
 			flags &= other.flags;
 			return *this;
 		}
+		constexpr inline SnakeFlags& operator|=(const SnakeFlags& other) noexcept {
+			flags |= other.flags;
+			return *this;
+		}
         constexpr inline SnakeFlags operator&(const SnakeFlags& other) const noexcept {
 			return SnakeFlags(flags & other.flags);
 		}
 
 		constexpr inline SnakeFlags operator~() const noexcept {
 			return SnakeFlags(~flags);
+		}
+
+		constexpr inline size_t size() const noexcept {
+			return containsAny(Player1) + containsAny(Player2) + containsAny(Player3) + containsAny(Player4) +
+				containsAny(Player5) + containsAny(Player6) + containsAny(Player7) + containsAny(Player8);
+		}
+
+		constexpr size_t getIndex() const noexcept {
+			ASSERT(size() == 1, "The index may only be retrieved if the flags only contain one snake.");
+			for (size_t i = 0;; ++i)
+				if (containsAny(SnakeFlags::ByIndex(i).flags))
+					return i;
+			ASSERT(false, "No index found");
 		}
 
 		constexpr static inline SnakeFlags ByIndex(size_t idx) noexcept {
