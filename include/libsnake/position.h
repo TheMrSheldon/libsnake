@@ -6,9 +6,9 @@
 
 namespace ls {
 	struct Position final {
-		unsigned x, y;
+		int x, y;
 
-		inline Position(unsigned x = 0, unsigned y = 0) noexcept : x(x), y(y) {}
+		inline Position(int x = 0, int y = 0) noexcept : x(x), y(y) {}
 
 		inline bool operator==(const Position& other) const noexcept {
 			return x == other.x && y == other.y;
@@ -25,6 +25,10 @@ namespace ls {
 
 		inline Position after_move(const Move& move) const noexcept {
 			return Position(x + move.deltaX(), y + move.deltaY());
+		}
+
+		inline Position clamp(const Position& min, const Position& max) const noexcept {
+			return Position(std::min(max.x, std::max(min.x, x)), std::min(max.y, std::max(min.y, y)));
 		}
 
 		inline Move directionFrom(const Position& from) const noexcept {

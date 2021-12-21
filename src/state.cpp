@@ -83,24 +83,16 @@ bool State::isFoodAt(const Position& pos) const noexcept {
 	return isInBounds(pos) && food[pos];
 }
 
-void State::print(std::ostream& out) const noexcept {
-	out << std::string(2*getWidth()+3, '#') << std::endl;
-	for (unsigned y = 1; y <= getHeight(); ++y) {
-		out << "# ";
-		for (unsigned x = 0; x < getWidth(); ++x) {
-			char c = '.';
-			if (isFoodAt({x, getHeight()-y}))
-				c = 'o';
-			else {
-				auto snake = getSnakeIndexAt({x,getHeight()-y});
-				if (snake >= snakes.size())
-					c = '.';
-				else
-					c = std::to_string(snake+1)[0];
-			}
-			out << c << ' ';
-		}
-		out << "#" << std::endl;
+namespace ls {
+	std::ostream& operator<<(std::ostream& os, const State& state) noexcept {
+		State::drawBoard(os, state.getWidth(), state.getHeight(), [state](const Position& pos) {
+			if (state.isFoodAt(pos))
+				return 'o';
+			auto snake = state.getSnakeIndexAt(pos);
+			if (snake < state.getSnakes().size())
+				return std::to_string(snake+1)[0];
+			return '.';
+		});
+		return os;
 	}
-	out << std::string(2*getWidth()+3, '#') << std::endl;
 }
