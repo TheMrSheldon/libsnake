@@ -50,6 +50,9 @@ namespace ls {
         constexpr inline SnakeFlags operator&(const SnakeFlags& other) const noexcept {
 			return SnakeFlags(flags & other.flags);
 		}
+        constexpr inline SnakeFlags operator|(const SnakeFlags& other) const noexcept {
+			return SnakeFlags(flags | other.flags);
+		}
 
 		constexpr inline SnakeFlags operator~() const noexcept {
 			return SnakeFlags(~flags);
