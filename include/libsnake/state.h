@@ -62,21 +62,21 @@ namespace ls {
 		DLLEXPORT friend std::ostream& operator<<(std::ostream& os, const State& state) noexcept;
 
 		template<typename F>
-		static void drawBoard(std::ostream& out, unsigned width, unsigned height, F callback) {
+		static void drawBoard(std::ostream& out, unsigned width, unsigned height, F callback, unsigned cellWidth=1) {
 			constexpr char box_hor = '\xC4';
 			constexpr char box_vert = '\xB3';
 			constexpr char box_tl = '\xDA';
 			constexpr char box_tr = '\xBF';
 			constexpr char box_bl = '\xC0';
 			constexpr char box_br = '\xD9';
-			out << box_tl << std::string(width*2+1, box_hor) << box_tr << std::endl;
+			out << box_tl << std::string((width*(1+cellWidth))+1, box_hor) << box_tr << std::endl;
 			for (unsigned y = 0; y < height; y++) {
 				out << box_vert << ' ';
 				for (unsigned x = 0; x < width; x++)
 					out << callback(ls::Position(x,height-1-y)) << ' ';
 				out << box_vert << '\n';
 			}
-			out << box_bl << std::string(width*2+1, box_hor) << box_br << std::endl;
+			out << box_bl << std::string((width*(1+cellWidth))+1, box_hor) << box_br << std::endl;
 		}
 	};
 }
