@@ -13,13 +13,35 @@
 
 namespace ls {
 
+	/**
+	 * @brief A datastructure that stores the food-positions.
+	 */
 	class Foods final {
 	private:
+		/**
+		 * @brief The width of the playarea.
+		 */
 		const unsigned width;
+		/**
+		 * @brief The height of the playarea.
+		 */
 		const unsigned height;
+		/**
+		 * @brief Stores a boolean for each position that is set to true iff food is at that position.
+		 * @details The vector is indexed in row-major order. Thus the index for the coordinates (x,y)
+		 * is y*width + x. The vector is additionally stored in an std::shared_ptr to allow for copy-
+		 * on-write.
+		 */
 		std::shared_ptr<std::vector<uint8_t>> positions;
 
 	public:
+		/**
+		 * @brief Creates a new Foods object that stores the food-locations for a field of the specified
+		 * width and height. Initially no food is stored anywhere on the field.
+		 * 
+		 * @param width the width of the playarea.
+		 * @param height the height of the playarea.
+		 */
 		DLLEXPORT Foods(unsigned width, unsigned height) noexcept;
 		DLLEXPORT Foods(unsigned width, unsigned height, std::vector<Position> pos) noexcept;
 		DLLEXPORT void set(const Position& p, bool value) noexcept;
@@ -33,9 +55,18 @@ namespace ls {
 		inline const std::vector<uint8_t>* __raw() const noexcept { return positions.get(); }
 	};
 
+	/**
+	 * @brief Represents the gamestate of snake.
+	 */
 	class State final {
 	private:
+		/**
+		 * @brief The width of the playarea.
+		 */
 		const unsigned width;
+		/**
+		 * @brief The height of the playarea.
+		 */
 		const unsigned height;
 		const std::vector<Snake> snakes;
 		const Foods food;
@@ -49,6 +80,11 @@ namespace ls {
 
 		DLLEXPORT Move getPossibleActions(size_t snake) const noexcept;
 
+		/**
+		 * @brief Returns the snake-data of this gamestate.
+		 * 
+		 * @return The snake-data of this gamestate.
+		 */
 		inline const std::vector<Snake>& getSnakes() const noexcept { return snakes; }
 		inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
 		inline const Foods& getFood() const noexcept { return food; }
@@ -61,6 +97,19 @@ namespace ls {
 
 		DLLEXPORT friend std::ostream& operator<<(std::ostream& os, const State& state) noexcept;
 
+		/**
+		 * @brief Prints a board to the provided outputstream.
+		 * @details The function prints a box of size \p width &times; \p height and calls the callback to print the cell
+		 * for each position. It is assumed that the callback returns exactly \p cellWidth characters which are then
+		 * printed to the stream.
+		 * 
+		 * @tparam F The type of the callback. It is kept generic to allow for any callable object to be passed.
+		 * @param out The outputstream to print the state to.
+		 * @param width The width of the state.
+		 * @param height The height of the state.
+		 * @param callback A callback called with a Position argument to retrieve what to print for the respective cell.
+		 * @param cellWidth The width of a single state-cell.
+		 */
 		template<typename F>
 		static void drawBoard(std::ostream& out, unsigned width, unsigned height, F callback, unsigned cellWidth=1) {
 			constexpr char box_hor = '\xC4';

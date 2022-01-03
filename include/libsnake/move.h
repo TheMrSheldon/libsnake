@@ -1,7 +1,10 @@
 #pragma once
 
 namespace ls {
-
+	/**
+	 * @brief 
+	 * @details 
+	 */
 	class Move final {
 	public:
 		constexpr static int none = 0;
