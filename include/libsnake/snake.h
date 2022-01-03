@@ -1,0 +1,145 @@
+#pragma once
+
+#include "position.h"
+#include "move.h"
+
+#include "definitions.h"
+
+#include <vector>
+
+namespace ls {
+	/**
+	 * @brief Represents a snake object.
+	 */
+	class Snake final {
+	private:
+		/**
+		 * @brief The position of the snakes body elements. The list is ordered such that the head is always at index 0
+		 * and the last element of the tail is always the last element in the body.
+		 * @details The tail should always contain one or more elements.
+		 * 
+		 * @see Snake::getBody()
+		 */
+		const std::vector<Position> body;
+		/**
+		 * @brief The direction the snake last moved in.
+		 * 
+		 * @see Snake::getDirection()
+		 */
+		const Move direction;
+		/**
+		 * @brief The health of this snake.
+		 * 
+		 * @see Snake::getHealth()
+		 */
+		const int health;
+
+		/**
+		 * @brief Calculates the direction of a snake based on its body.
+		 * @details If the snake only has a head (its length is &#8804; 1) Move::none is returned. Otherwise the direction
+		 * from its second body element (the one after the head) to its head is returned.
+		 * 
+		 * @see Position::directionFrom(Position)
+		 * @param body The snakes body for which to calculate the direction.
+		 * @return The direction the snake last moved in.
+		 */
+		inline static Move getDirection(const std::vector<Position>& body) {
+			if (body.size() <= 1)
+				return Move::none;
+			return body[0].directionFrom(body[1]);
+		}
+
+	public:
+		/**
+		 * @brief Constructs a new Snake object given the provided body, direction and health. The direction may not coincide with the direction
+		 * from the second element in the body to the head.
+		 * @details Note that the data from \p body is moved into the snake's own body-vector and thus \p body is modified.
+		 * 
+		 * @param body The new snake's body.
+		 * @param direction The new snake's direction. This may not be the same as the direction from the second element of the body to the head.
+		 * @param health The new snake's health.
+		 */
+		Snake(std::vector<Position>&& body, Move direction, int health) noexcept : body(std::move(body)), direction(direction), health(health) {
+			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
+		}
+		/**
+		 * @brief Constructs a new Snake object given the provided body and health. The snakes direction is inferred from its body.
+		 * @details Note that the data from \p body is moved into the snake's own body-vector and thus \p body is modified.
+		 * 
+		 * @param body The new snake's body.
+		 * @param health The new snake's health.
+		 */
+		Snake(std::vector<Position>&& body, int health) noexcept : body(std::move(body)), direction(getDirection(this->body)), health(health) {
+			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
+		}
+
+		/**
+		 * @brief Checks if this snake is dead. The snake is considered dead iff its health is 0.
+		 * 
+		 * @see Snake::getHealth()
+		 * @return true iff the snake is dead.
+		 */
+		inline const bool isDead() const noexcept { return getHealth() <= 0; }
+		/**
+		 * @brief Returns the position of this snake's head.
+		 * 
+		 * @return The position of this snake's head.
+		 */
+		inline const Position& getHeadPos() const noexcept { return body[0];}
+		/**
+		 * @brief Returns the length of this snake. That is the length of its body.
+		 * 
+		 * @see Snake::getBody()
+		 * @return The length of this snake. 
+		 */
+		inline const std::size_t length() const noexcept { return body.size(); }
+
+		/**
+		 * @brief Returns the direction of this snake. That is the last movement the snake has performed.
+		 * It is Move::none if the snake has not moved previously.
+		 * 
+		 * @return The direction of the snake.
+		 */
+		inline const Move& getDirection() const noexcept { return direction; }
+		/**
+		 * @brief Returns the health of this snake.
+		 * 
+		 * @return The health of this snake.
+		 */
+		inline const int& getHealth() const noexcept { return health; }
+		/**
+		 * @brief Returns this snake's body. That is the Positions at which each element of the snake's
+		 * tail is located. The list is ordered according to the element's occurence in the snake's body.
+		 * The head is at index 0 and the last element of the tail is at the last index of the body.
+		 * 
+		 * @return This snake's body.
+		 */
+		inline const std::vector<Position>& getBody() const noexcept { return body; }
+
+		/**
+		 * @brief Constructs a new snake with the updated body, health and direction given the move and wether
+		 * the snake has eaten or died.
+		 * @details If the snake died, a snake with 0 health and its head at the coordinates (-1,-1) is returned.
+		 * Otherwise the snakes body is updated by moving into the direction provided by \p move. If the snake has
+		 * eaten the returned snake has 100 health (max health) and is longer by one element.
+		 * 
+		 * @param move The direction the snake moves in.
+		 * @param hasEaten True iff the snake has eaten while moving in the direction of \p move.
+		 * @param dead True iff the snake has died while moving in the direction of \p move.
+		 * @return The next snake-state after this snake was moved in direction \p move.
+		 */
+		inline Snake afterMove(const Move& move, bool hasEaten, bool dead) const noexcept {
+			if (dead)
+				return Snake(std::vector<Position>(1, Position(-1, -1)), move, 0);
+			const std::size_t newLength = body.size() + hasEaten;
+			std::vector<Position> newbody;
+			newbody.reserve(newLength);
+			newbody.emplace_back(getHeadPos().after_move(move));
+			for (std::size_t i = 0; i < body.size()-1; ++i)
+				newbody.emplace_back(body[i]);
+			if (hasEaten)
+				newbody.emplace_back(newbody[newbody.size()-1]);
+			return Snake(std::move(newbody), move, hasEaten? 100 : health-1);
+		}
+	};
+}

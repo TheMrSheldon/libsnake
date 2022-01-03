@@ -13,7 +13,9 @@ include(FetchContent)
 include(CTest)
 enable_testing()
 
-add_library(libsnake SHARED src/libsnake_api.cpp src/state.cpp src/eval.cpp)
+add_library(libsnake SHARED src/state.cpp src/snake_flags.cpp src/definitions.cpp src/gamemodes/arena.cpp)
+target_compile_features(libsnake PRIVATE cxx_std_20)
+target_compile_definitions(libsnake PRIVATE BUILD_SHARED)
 
 include_directories(PUBLIC include)
 
