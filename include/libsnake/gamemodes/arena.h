@@ -15,6 +15,8 @@ namespace ls::gm {
 		DLLEXPORT Move getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept override;
 	};
 
+	/**
+	 * @brief The default instance of the arena gamemode
+	 */
 	DLLEXPORT extern ArenaGamemode Arena;
-
 }

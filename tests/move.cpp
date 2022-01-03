@@ -65,4 +65,13 @@ TEST_CASE("Iterating moves", "[Moves]") {
 		CHECK(iterated[0] == ls::Move::up);
 		CHECK(iterated[1] == ls::Move::down);
 	}
+	{
+		ls::Move moves = ls::Move::left | ls::Move::down;
+		std::vector<ls::Move> iterated;
+		for (const auto& move : moves)
+			iterated.push_back(move);
+		REQUIRE(iterated.size() == 2);
+		CHECK(iterated[0] == ls::Move::left);
+		CHECK(iterated[1] == ls::Move::down);
+	}
 }
