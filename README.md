@@ -7,7 +7,6 @@ Adding libsnake to your CMake project is easy. Simply add the following lines to
 FetchContent_Declare(
 	libsnake_lib
 	GIT_REPOSITORY https://github.com/TheMrSheldon/libsnake.git
-	GIT_TAG gamemodes
 )
 FetchContent_MakeAvailable(libsnake_lib)
 FetchContent_GetProperties(libsnake_lib)
