@@ -1,3 +1,5 @@
+[![Tests](https://github.com/TheMrSheldon/libsnake/actions/workflows/cmake_tests.yml/badge.svg)](https://github.com/TheMrSheldon/libsnake/actions/workflows/cmake_tests.yml)
+
 # What is libsnake?
 [TODO: Insert text here]
 
