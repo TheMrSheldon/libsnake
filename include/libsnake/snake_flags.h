@@ -71,6 +71,10 @@ namespace ls {
 			ASSERT(false, "No index found");
 		}
 
+		constexpr operator primitive() const noexcept {
+			return flags;
+		}
+
 		constexpr static inline SnakeFlags ByIndex(size_t idx) noexcept {
 			return SnakeFlags(1<<idx);
 		}

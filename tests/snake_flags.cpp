@@ -23,9 +23,9 @@ TEST_CASE("General Snake Flags Case", "[Snake Flags]") {
         CHECK_FALSE(flags.containsAll(ls::SnakeFlags::Player7));
         CHECK_FALSE(flags.containsAll(ls::SnakeFlags::Player8));
         CHECK(flags.size() == 0);
-        CHECK((flags | ls::SnakeFlags::Player3) == ls::SnakeFlags::Player3);
-        CHECK((flags | ls::SnakeFlags::Player3).containsAny(ls::SnakeFlags::Player3));
-        CHECK_FALSE((~(flags | ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3));
+        CHECK((flags | (ls::SnakeFlags)ls::SnakeFlags::Player3) == ls::SnakeFlags::Player3);
+        CHECK((flags | (ls::SnakeFlags)ls::SnakeFlags::Player3).containsAny(ls::SnakeFlags::Player3));
+        CHECK_FALSE((~(flags | (ls::SnakeFlags)ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3));
     }
     {
         auto flags = ls::SnakeFlags(ls::SnakeFlags::Player5);
@@ -51,10 +51,10 @@ TEST_CASE("General Snake Flags Case", "[Snake Flags]") {
         CHECK(flags.getIndex() == 4);//Player 5 has index 4
         CHECK(flags.containsAny(ls::SnakeFlags::Player5 | ls::SnakeFlags::Player3));
         CHECK_FALSE(flags.containsAll(ls::SnakeFlags::Player5 | ls::SnakeFlags::Player3));
-        CHECK((flags & ls::SnakeFlags::Player3) == (ls::SnakeFlags::None));
-        CHECK((flags | ls::SnakeFlags::Player3).containsAny(ls::SnakeFlags::Player3));
-        CHECK_FALSE((~(flags | ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3 | ls::SnakeFlags::Player5));
-        CHECK((~(flags | ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3 | ls::SnakeFlags::Player2));
+        CHECK((flags & (ls::SnakeFlags)ls::SnakeFlags::Player3) == (ls::SnakeFlags::None));
+        CHECK((flags | (ls::SnakeFlags)ls::SnakeFlags::Player3).containsAny(ls::SnakeFlags::Player3));
+        CHECK_FALSE((~(flags | (ls::SnakeFlags)ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3 | ls::SnakeFlags::Player5));
+        CHECK((~(flags | (ls::SnakeFlags)ls::SnakeFlags::Player3)).containsAny(ls::SnakeFlags::Player3 | ls::SnakeFlags::Player2));
     }
     {
         auto flags = ls::SnakeFlags::FromTo(1, 4);

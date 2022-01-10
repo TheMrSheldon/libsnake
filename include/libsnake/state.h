@@ -91,7 +91,14 @@ namespace ls {
 		inline unsigned getWidth() const noexcept { return width; }
 		inline unsigned getHeight() const noexcept { return height; }
 		DLLEXPORT bool isInBounds(const Position& pos) const noexcept;
-		DLLEXPORT bool isBlocked(const Position& pos) const noexcept;
+		/**
+		 * @brief Checks if the field at \p pos is blocked by any of the snakes in \p mask.
+		 * 
+		 * @param pos The position for which to check if it is blocked.
+		 * @param mask The snakes for which to check if they block the field at \p pos.
+		 * @return true iff the field at \p pos is blocked by any of the snakes in \p mask. 
+		 */
+		DLLEXPORT bool isBlocked(const Position& pos, const SnakeFlags& mask) const noexcept;
 		DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos) const noexcept;
 		DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 

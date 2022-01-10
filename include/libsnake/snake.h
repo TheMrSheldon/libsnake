@@ -1,7 +1,8 @@
 #pragma once
 
-#include "position.h"
 #include "move.h"
+#include "position.h"
+#include "snake_flags.h"
 
 #include "definitions.h"
 
@@ -35,6 +36,15 @@ namespace ls {
 		const int health;
 
 		/**
+		 * @brief The squad this snake belongs to. The squad-identifier actually is a set of flags
+		 * representing the indices of the snakes that are in the same squad. A snake that is not playing
+		 * in a squad should that have only the flag set that corresponds to its own index.
+		 * 
+		 * @see Snake::getSquad()
+		 */
+		const SnakeFlags squad;
+
+		/**
 		 * @brief Calculates the direction of a snake based on its body.
 		 * @details If the snake only has a head (its length is &#8804; 1) Move::none is returned. Otherwise the direction
 		 * from its second body element (the one after the head) to its head is returned.
@@ -58,8 +68,9 @@ namespace ls {
 		 * @param body The new snake's body.
 		 * @param direction The new snake's direction. This may not be the same as the direction from the second element of the body to the head.
 		 * @param health The new snake's health.
+		 * @param squad The snake's squad. If the snake should not be part of a squad set it to ls::SnakeFlags::FromIndex with the index of the snake.
 		 */
-		Snake(std::vector<Position>&& body, Move direction, int health) noexcept : body(std::move(body)), direction(direction), health(health) {
+		Snake(std::vector<Position>&& body, Move direction, int health, SnakeFlags squad) noexcept : body(std::move(body)), direction(direction), health(health), squad(squad) {
 			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
 		}
 		/**
@@ -68,10 +79,9 @@ namespace ls {
 		 * 
 		 * @param body The new snake's body.
 		 * @param health The new snake's health.
+		 * @param squad The snake's squad. If the snake should not be part of a squad set it to ls::SnakeFlags::FromIndex with the index of the snake.
 		 */
-		Snake(std::vector<Position>&& body, int health) noexcept : body(std::move(body)), direction(getDirection(this->body)), health(health) {
-			ASSERT(this->body.size() != 0, "The body may not be empty. It must at least contain a head");
-		}
+		Snake(std::vector<Position>&& body, int health, SnakeFlags squad) noexcept : Snake(std::move(body), getDirection(body), health, squad) {}
 
 		/**
 		 * @brief Checks if this snake is dead. The snake is considered dead iff its health is 0.
@@ -115,6 +125,14 @@ namespace ls {
 		 * @return This snake's body.
 		 */
 		inline const std::vector<Position>& getBody() const noexcept { return body; }
+		/**
+		 * @brief Returns an identfiier that represents the snake's squad. The identifier actually is a set of flags
+		 * representing the indices of the snakes that are in the same team. A snake that is not playing
+		 * in a squad should that have only the flag set that corresponds to its own index.
+		 * 
+		 * @return An identifier representing the snake's squad.
+		 */
+		inline const SnakeFlags& getSquad() const noexcept { return squad; }
 
 		/**
 		 * @brief Constructs a new snake with the updated body, health and direction given the move and wether
@@ -130,7 +148,7 @@ namespace ls {
 		 */
 		inline Snake afterMove(const Move& move, bool hasEaten, bool dead) const noexcept {
 			if (dead)
-				return Snake(std::vector<Position>(1, Position(-1, -1)), move, 0);
+				return Snake(std::vector<Position>(1, Position(-1, -1)), move, 0, squad);
 			const std::size_t newLength = body.size() + hasEaten;
 			std::vector<Position> newbody;
 			newbody.reserve(newLength);
@@ -139,7 +157,7 @@ namespace ls {
 				newbody.emplace_back(body[i]);
 			if (hasEaten)
 				newbody.emplace_back(newbody[newbody.size()-1]);
-			return Snake(std::move(newbody), move, hasEaten? 100 : health-1);
+			return Snake(std::move(newbody), move, hasEaten? 100 : health-1, squad);
 		}
 	};
 }

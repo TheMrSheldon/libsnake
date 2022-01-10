@@ -66,8 +66,12 @@ bool State::isInBounds(const Position& pos) const noexcept {
 	return pos.x >= 0 && pos.y >= 0 && pos.x < getWidth() && pos.y < getHeight();
 }
 
-bool State::isBlocked(const Position& pos) const noexcept {
-	return !isInBounds(pos) || getSnakeIndexAt(pos) < snakes.size();
+bool State::isBlocked(const Position& pos, const SnakeFlags& mask) const noexcept {
+	if (!isInBounds(pos))
+		return true;
+	const auto idx = getSnakeIndexAt(pos);
+	const bool blockedBySnake = idx < snakes.size() && mask.containsAny(SnakeFlags::ByIndex(idx));
+	return blockedBySnake;
 }
 
 std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {
