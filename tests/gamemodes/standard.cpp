@@ -3,9 +3,6 @@
 #include <libsnake/state.h>
 #include <libsnake/gamemodes/standard.h>
 
-
-#include <iostream>
-
 using namespace ls;
 
 TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {

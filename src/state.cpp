@@ -66,18 +66,20 @@ bool State::isInBounds(const Position& pos) const noexcept {
 	return pos.x >= 0 && pos.y >= 0 && pos.x < getWidth() && pos.y < getHeight();
 }
 
-bool State::isBlocked(const Position& pos, const SnakeFlags& mask) const noexcept {
+bool State::isBlocked(const Position& pos, const SnakeFlags& mask, bool ignoreTailtips) const noexcept {
 	if (!isInBounds(pos))
 		return true;
-	const auto idx = getSnakeIndexAt(pos);
+	const auto idx = getSnakeIndexAt(pos, ignoreTailtips);
 	const bool blockedBySnake = idx < snakes.size() && mask.containsAny(SnakeFlags::ByIndex(idx));
 	return blockedBySnake;
 }
 
-std::size_t State::getSnakeIndexAt(const Position& pos) const noexcept {
+std::size_t State::getSnakeIndexAt(const Position& pos, bool ignoreTailtips) const noexcept {
 	std::size_t index = 0;
 	for (; index < snakes.size(); ++index) {
-		if (utl::contains(snakes[index].getBody(), pos))
+		const auto& body = snakes[index].getBody();
+		const auto endIt = (ignoreTailtips && body.begin() != body.end())? std::prev(body.end()) : body.end();
+		if (utl::contains(body.begin(), endIt, pos))
 			return index;
 	}
 	return index;

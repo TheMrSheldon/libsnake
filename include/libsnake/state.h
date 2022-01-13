@@ -96,10 +96,11 @@ namespace ls {
 		 * 
 		 * @param pos The position for which to check if it is blocked.
 		 * @param mask The snakes for which to check if they block the field at \p pos.
+		 * @param ignoreTailtips True iff the last element of a snakes tail should not be considered blocked.
 		 * @return true iff the field at \p pos is blocked by any of the snakes in \p mask. 
 		 */
-		DLLEXPORT bool isBlocked(const Position& pos, const SnakeFlags& mask) const noexcept;
-		DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos) const noexcept;
+		DLLEXPORT bool isBlocked(const Position& pos, const SnakeFlags& mask, bool ignoreTailtips=false) const noexcept;
+		DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos, bool ignoreTailtips=false) const noexcept;
 		DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 
 		DLLEXPORT friend std::ostream& operator<<(std::ostream& os, const State& state) noexcept;
