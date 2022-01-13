@@ -5,7 +5,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch)
 
-add_executable(tests main.cpp move.cpp snake_flags.cpp gamemodes/arena.cpp)
+add_executable(tests main.cpp move.cpp snake_flags.cpp gamemodes/standard.cpp gamemodes/squad.cpp)
 #target_compile_features(tests PRIVATE cxx_std_20)
 
 target_link_libraries(tests PRIVATE libsnake Catch2::Catch2)

@@ -26,11 +26,12 @@ namespace ls {
 		 * @brief Construct a new Gamemode object
 		 */
 		Gamemode() noexcept = default;
+	public:
 		/**
 		 * @brief Destroy the Gamemode object. Virtual since the class is virtual.
 		 */
 		virtual ~Gamemode() = default;
-	public:
+		
 		/**
 		 * @brief Checks if the game in the provided state is over.
 		 * 

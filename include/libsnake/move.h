@@ -63,7 +63,12 @@ namespace ls {
 			 * @param move The ls::Move object to iterate over.
 			 * @param flag The first flag of the iterator.
 			 */
-			Iterator(const class Move& move, int flag) : move(move), flag(flag) {/*FIXME: it may be that the flag stored is not set in move*/}
+			Iterator(const class Move& move, int flag) : move(move), flag(flag) {
+				// If the passed first flag of the iterator is not set in the move instance
+				// we want to place the iterator on the next flag that is set in move.
+				if (!move.containsFlag(flag))
+					++(*this);
+			}
 			/**
 			 * @brief Dereferences the iterator by returning a ls::Move object that has only the flag set that the iterator
 			 * is currently on. The Move::end() iterator will return ls::Move::none.

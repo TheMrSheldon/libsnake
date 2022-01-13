@@ -16,4 +16,8 @@ namespace utl {
 	constexpr inline bool contains(const _Container& cont, const T& val) {
 		return std::find(std::begin(cont), std::end(cont), val) != std::end(cont);
 	}
+	
+	constexpr inline bool contains(const auto& begin, const auto& end, const auto& val) {
+		return std::find(begin, end, val) != end;
+	}
 }
