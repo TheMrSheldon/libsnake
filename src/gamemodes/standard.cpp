@@ -68,12 +68,11 @@ State StandardGamemode::stepState(const State& state, const std::vector<Move>& m
 }
 
 Move StandardGamemode::getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept {
-	//FIXME: The tip of a tail of a snake should not be considered blocked
 	Move ret = Move::none;
 	const auto& snake = state.getSnake(snakeIdx);
 	const auto collisionMask = getCollisionMask(state, snakeIdx);
 	for (const auto& move : state.getPossibleActions(snakeIdx))
-		if (!state.isBlocked(snake.getHeadPos().after_move(move), collisionMask))
+		if (!state.isBlocked(snake.getHeadPos().after_move(move), collisionMask, true))
 			ret |= move;
 	return ret;
 }

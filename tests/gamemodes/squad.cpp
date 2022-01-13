@@ -11,7 +11,7 @@ TEST_CASE("Squad - State progression 1 (no food)", "[Gamemode Squad]") {
     /**
      * ╔═══════════╗	Snake 1:	<11
      * ║ . 2 2 2 . ║	Snake 2:	<22
-     * ║ . 2 < 2 . ║	Snake 3:	<33
+     * ║ 2 2 < 2 . ║	Snake 3:	<33
      * ║ 1 > . < 3 ║	Food:		o
      * ╚═══════════╝    Empty:      .
      * Snake 1 and 2 are in the same squad.
@@ -20,7 +20,7 @@ TEST_CASE("Squad - State progression 1 (no food)", "[Gamemode Squad]") {
     auto& gamemode = ls::gm::Squad;
     gamemode.setAllowBodyCollisions(true);
 	std::vector<Position> snake1 = {{1,0},{0,0}};
-	std::vector<Position> snake2 = {{2,1},{3,1},{3,2},{2,2},{1,2},{1,1}};
+	std::vector<Position> snake2 = {{2,1},{3,1},{3,2},{2,2},{1,2},{1,1},{0,1}};
 	std::vector<Position> snake3 = {{3,0},{4,0}};
 	std::vector<Position> food = {};
     auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
@@ -39,6 +39,9 @@ TEST_CASE("Squad - State progression 1 (no food)", "[Gamemode Squad]") {
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::up | Move::left)));
 	CHECK((state1.getPossibleActions(2) == (Move::down | Move::left | Move::up)));
 	CHECK(state1.getFood().size() == 0);
+    CHECK((gamemode.getUnblockedActions(state1, 0) == (Move::right | Move::up)));
+    CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down | Move::up | Move::left)));
+    CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
     {//If snake1 and snake3 move up and snake2 moves down: only snake3 should be dead and snake1 and snake2 won
         auto next = gamemode.stepState(state1, {Move::up, Move::down, Move::up});
 		CHECK(gamemode.isGameOver(next));

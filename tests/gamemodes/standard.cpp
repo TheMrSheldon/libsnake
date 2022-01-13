@@ -30,6 +30,30 @@ TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {
 	CHECK(state1.getPossibleActions(0) == (Move::up | Move::left | Move::down));
 	CHECK(state1.getPossibleActions(1) == (Move::down | Move::left | Move::right));
 	CHECK(state1.getFood().size() == 0);
+
+	//Check if getSnakeIndexAt works:
+	//Not ignoring tailtips
+	CHECK(state1.getSnakeIndexAt({0,0}, false)==2);
+	CHECK(state1.getSnakeIndexAt({1,0}, false)==0);
+	CHECK(state1.getSnakeIndexAt({2,0}, false)==0);
+	CHECK(state1.getSnakeIndexAt({0,1}, false)==1);
+	CHECK(state1.getSnakeIndexAt({1,1}, false)==2);
+	CHECK(state1.getSnakeIndexAt({2,1}, false)==2);
+	CHECK(state1.getSnakeIndexAt({0,2}, false)==1);
+	CHECK(state1.getSnakeIndexAt({1,2}, false)==1);
+	CHECK(state1.getSnakeIndexAt({2,2}, false)==2);
+	
+	//Ignoring tailtips
+	CHECK(state1.getSnakeIndexAt({0,0}, true)==2);
+	CHECK(state1.getSnakeIndexAt({1,0}, true)==0);
+	CHECK(state1.getSnakeIndexAt({2,0}, true)==2);
+	CHECK(state1.getSnakeIndexAt({0,1}, true)==1);
+	CHECK(state1.getSnakeIndexAt({1,1}, true)==2);
+	CHECK(state1.getSnakeIndexAt({2,1}, true)==2);
+	CHECK(state1.getSnakeIndexAt({0,2}, true)==1);
+	CHECK(state1.getSnakeIndexAt({1,2}, true)==2);
+	CHECK(state1.getSnakeIndexAt({2,2}, true)==2);
+
 	{// - If snake1 moves left and snake2 moves up: Gameover (head to head collision)
 		auto next = gamemode.stepState(state1, {Move::left, Move::down});
 		CHECK(gamemode.isGameOver(next));
