@@ -14,20 +14,13 @@ SquadGamemode ls::gm::Squad;
 SquadGamemode::SquadGamemode() noexcept {}
 
 bool SquadGamemode::isGameOver(const State& state) const noexcept {
-	std::set<SnakeFlags> squads;
-	for (const auto& snake : state.getSnakes())
-		if (!snake.isDead())
-			squads.insert(snake.getSquad());
-	return squads.size() <= 1;
+	return state.getLivingSquads().size() <= 1;
 }
 
 SnakeFlags SquadGamemode::getWinner(const State& state) const noexcept {
-	std::set<SnakeFlags> squads;
-	for (const auto& snake : state.getSnakes())
-		if (!snake.isDead())
-			squads.insert(snake.getSquad());
+	const auto& squads = state.getLivingSquads();
 	if (squads.empty()) //A tie between all snakes if noone is left alive
-		return SnakeFlags::FromTo(0, state.getSnakes().size());
+		return SnakeFlags::FromTo(0, state.getNumSnakes());
 	else if (squads.size() == 1) //Return the squad that is last one standing
 		return *squads.begin();
 	return SnakeFlags::None; // Two or more squads are left alive thus noone won

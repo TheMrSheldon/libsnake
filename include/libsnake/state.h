@@ -71,11 +71,11 @@ namespace ls {
 		const unsigned height;
 		const std::vector<Snake> snakes;
 		const Foods food;
-		std::set<ls::SnakeFlags> squads;
+		std::set<ls::SnakeFlags> livingSquads;
 		
 	public:
-		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)), squads(std::move(other.squads)) {}
-		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food), squads(other.squads) {}
+		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)), livingSquads(std::move(other.livingSquads)) {}
+		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food), livingSquads(other.livingSquads) {}
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept;
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept;
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept;
@@ -88,8 +88,19 @@ namespace ls {
 		 * @return The snake-data of this gamestate.
 		 */
 		inline const std::vector<Snake>& getSnakes() const noexcept { return snakes; }
+		/**
+		 * @brief Returns the number of total snakes that parttake in the game (including dead snakes).
+		 * 
+		 * @return The number of total snakes that parttake in the game (including dead snakes).
+		 */
+		inline constexpr std::size_t getNumSnakes() const noexcept { return snakes.size(); }
 		inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
-		inline const std::set<SnakeFlags>& getSquads() const noexcept { return squads; }
+		/**
+		 * @brief Returns the squads that have at least one living snake remaining within State::getSnakes().
+		 * 
+		 * @return A set containing the squads that have at least one living snake remaining within State::getSnakes().
+		 */
+		inline const std::set<SnakeFlags>& getLivingSquads() const noexcept { return livingSquads; }
 		inline const Foods& getFood() const noexcept { return food; }
 		inline unsigned getWidth() const noexcept { return width; }
 		inline unsigned getHeight() const noexcept { return height; }

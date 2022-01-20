@@ -18,8 +18,8 @@ bool StandardGamemode::isGameOver(const State& state) const noexcept {
 }
 
 SnakeFlags StandardGamemode::getWinner(const State& state) const noexcept {
-	SnakeFlags winner = SnakeFlags::FromTo(0, state.getSnakes().size());
-	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+	SnakeFlags winner = SnakeFlags::FromTo(0, state.getNumSnakes());
+	for (size_t i = 0; i < state.getNumSnakes(); ++i) {
 		const auto& snake = state.getSnake(i);
 		if (!snake.isDead())
 			winner &= SnakeFlags::ByIndex(i);
@@ -34,7 +34,7 @@ struct SnakeInfo {
 };
 static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const State& state, const std::vector<Move>& moves) noexcept {
 	std::vector<SnakeInfo> snakeInfos;
-	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+	for (size_t i = 0; i < state.getNumSnakes(); ++i) {
 		const auto& snake = state.getSnake(i);
 		const auto collisionMask = gm.getCollisionMask(state, i);
 		const auto newHead = snake.getHeadPos().after_move(moves[i]);
@@ -42,7 +42,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 		const bool starved = !eaten && snake.getHealth() <= 1;
 		const bool collision = state.isBlocked(newHead, collisionMask);
 		bool headToHead = false;
-		for (size_t j = 0; j < state.getSnakes().size(); ++j) {
+		for (size_t j = 0; j < state.getNumSnakes(); ++j) {
 			if (i != j) {
 				const auto& otherSnake = state.getSnake(j);
 				const auto otherHead = otherSnake.getHeadPos().after_move(moves[j]);
@@ -59,59 +59,33 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 }
 
 State StandardGamemode::stepState(const State& state, const std::vector<Move>& moves) const noexcept {
-	//TODO: implement sharedElimination
-	//TODO: implement sharedHealth
-	//TODO: implement sharedLength
-	assert(moves.size() == state.getSnakes().size());
+	assert(moves.size() == state.getNumSnakes());
 	if (isGameOver(state))
 		return state;
 	std::vector<Snake> snakes;
 	bool foodChanged = false;
 	const auto snakeInfos = calcSnakeInfo(*this, state, moves);
-	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+	for (size_t i = 0; i < state.getNumSnakes(); ++i) {
 		const auto& snake = state.getSnake(i);
 		const auto& info = snakeInfos[i];
 		bool eaten = info.eaten;
 		bool dead = info.dead;
 		if (sharedHealth || sharedLength) {//FIXME: discriminate between those two
-			for (size_t j = 0; j < state.getSnakes().size(); ++j)
+			for (size_t j = 0; j < state.getNumSnakes(); ++j)
 				if (state.getSnake(j).getSquad() == snake.getSquad())
 					eaten |= snakeInfos[j].eaten;
 		}
 		if (sharedElimination) {
-			for (size_t j = 0; j < state.getSnakes().size(); ++j)
+			for (size_t j = 0; j < state.getNumSnakes(); ++j)
 				if (state.getSnake(j).getSquad() == snake.getSquad())
 					dead |= snakeInfos[j].dead;
 		}
 		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
 		foodChanged = foodChanged || info.eaten;
 	}
-	/*bool foodChanged = false;
-	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
-		const auto& snake = state.getSnake(i);
-		const auto collisionMask = getCollisionMask(state, i);
-		const auto newHead = snake.getHeadPos().after_move(moves[i]);
-		const bool eaten = state.isFoodAt(newHead);
-		const bool starved = !eaten && snake.getHealth() <= 1;
-		const bool collision = state.isBlocked(newHead, collisionMask);
-		bool headToHead = false;
-		for (size_t j = 0; j < state.getSnakes().size(); ++j) {
-			if (i != j) {
-				const auto& otherSnake = state.getSnake(j);
-				const auto otherHead = otherSnake.getHeadPos().after_move(moves[j]);
-				if ((otherHead == newHead) && (snake.length() <= otherSnake.length())) {
-					headToHead = true;
-					break;
-				}
-			}
-		}
-		const bool dead = starved || collision || headToHead;
-		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
-		foodChanged |= eaten;
-	}*/
 	if (foodChanged && !isGameOver(state)) {
 		Foods food = state.getFood().clone();
-		for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+		for (size_t i = 0; i < state.getNumSnakes(); ++i) {
 			const auto newPos = state.getSnake(i).getHeadPos().after_move(moves[i]);
 			if (state.isInBounds(newPos))
 				food.set(newPos, false);
