@@ -34,7 +34,7 @@ SnakeFlags SquadGamemode::getWinner(const State& state) const noexcept {
 }
 
 SnakeFlags SquadGamemode::getCollisionMask(const State& state, std::size_t snakeIdx) const noexcept {
-	if (allowBodyCollision)
+	if (getAllowBodyCollisions())
 		return ~state.getSnake(snakeIdx).getSquad(); //toggle snakes belonging to my team off
 	return ~SnakeFlags::None; //Collide with all snakes
 }

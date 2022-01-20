@@ -51,11 +51,20 @@ Foods Foods::clone() const noexcept {
 }
 
 State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(food) {}
+	: width(width), height(height), snakes(std::move(snakes)), food(food) {
+		for (const auto& snake : getSnakes())
+			squads.insert(snake.getSquad());
+	}
 State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(std::move(food)) {}
+	: width(width), height(height), snakes(std::move(snakes)), food(std::move(food)) {
+		for (const auto& snake : getSnakes())
+			squads.insert(snake.getSquad());
+	}
 State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(width, height, food) {}
+	: width(width), height(height), snakes(std::move(snakes)), food(width, height, food) {
+		for (const auto& snake : getSnakes())
+			squads.insert(snake.getSquad());
+	}
 
 Move State::getPossibleActions(size_t snake) const noexcept {
 	auto& dir = snakes[snake].getDirection();

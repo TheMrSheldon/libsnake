@@ -7,11 +7,6 @@ namespace ls::gm {
 	//FIXME: sharedElimination, sharedHealth, and sharedLength are currently not factored in when stepping the state
 	
 	class SquadGamemode final : public ls::gm::StandardGamemode {
-	private:
-		bool allowBodyCollision;
-		bool sharedElimination;
-		bool sharedHealth;
-		bool sharedLength;
 	public:
 		DLLEXPORT SquadGamemode() noexcept;
 		/**
@@ -43,15 +38,6 @@ namespace ls::gm {
 		 * @return Flags indicating with which snakes this snake collides
 		 */
 		DLLEXPORT SnakeFlags getCollisionMask(const State& state, std::size_t snakeIdx) const noexcept override;
-
-		void setAllowBodyCollisions(bool value) noexcept { this->allowBodyCollision = value; }
-		bool getAllowBodyCollisions() const noexcept { return this->allowBodyCollision; }
-		void setSharedElimination(bool value) noexcept { this->sharedElimination = value; }
-		bool getSharedElimination() const noexcept { return this->sharedElimination; }
-		void setSharedHealth(bool value) noexcept { this->sharedHealth = value; }
-		bool getSharedHealth() const noexcept { return this->sharedHealth; }
-		void setSharedLength(bool value) noexcept { this->sharedLength = value; }
-		bool getSharedLength() const noexcept { return this->sharedLength; }
 	};
 
 	/**

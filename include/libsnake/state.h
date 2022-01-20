@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <ostream>
+#include <set>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -70,10 +71,11 @@ namespace ls {
 		const unsigned height;
 		const std::vector<Snake> snakes;
 		const Foods food;
+		std::set<ls::SnakeFlags> squads;
 		
 	public:
-		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)) {}
-		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food) {}
+		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)), squads(std::move(other.squads)) {}
+		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food), squads(other.squads) {}
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept;
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept;
 		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept;
@@ -87,6 +89,7 @@ namespace ls {
 		 */
 		inline const std::vector<Snake>& getSnakes() const noexcept { return snakes; }
 		inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
+		inline const std::set<SnakeFlags>& getSquads() const noexcept { return squads; }
 		inline const Foods& getFood() const noexcept { return food; }
 		inline unsigned getWidth() const noexcept { return width; }
 		inline unsigned getHeight() const noexcept { return height; }

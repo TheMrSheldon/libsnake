@@ -27,12 +27,66 @@ SnakeFlags StandardGamemode::getWinner(const State& state) const noexcept {
 	return winner;
 }
 
+struct SnakeInfo {
+	bool eaten, dead;
+	inline constexpr SnakeInfo(SnakeInfo&& other) noexcept : eaten(other.eaten), dead(other.dead) {}
+	inline constexpr SnakeInfo(bool eaten, bool dead) noexcept : eaten(eaten), dead(dead) {}
+};
+static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const State& state, const std::vector<Move>& moves) noexcept {
+	std::vector<SnakeInfo> snakeInfos;
+	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+		const auto& snake = state.getSnake(i);
+		const auto collisionMask = gm.getCollisionMask(state, i);
+		const auto newHead = snake.getHeadPos().after_move(moves[i]);
+		const bool eaten = state.isFoodAt(newHead);
+		const bool starved = !eaten && snake.getHealth() <= 1;
+		const bool collision = state.isBlocked(newHead, collisionMask);
+		bool headToHead = false;
+		for (size_t j = 0; j < state.getSnakes().size(); ++j) {
+			if (i != j) {
+				const auto& otherSnake = state.getSnake(j);
+				const auto otherHead = otherSnake.getHeadPos().after_move(moves[j]);
+				if ((otherHead == newHead) && (snake.length() <= otherSnake.length())) {
+					headToHead = true;
+					break;
+				}
+			}
+		}
+		const bool dead = starved || collision || headToHead;
+		snakeInfos.emplace_back(SnakeInfo(eaten, dead));
+	}
+	return std::move(snakeInfos);
+}
+
 State StandardGamemode::stepState(const State& state, const std::vector<Move>& moves) const noexcept {
+	//TODO: implement sharedElimination
+	//TODO: implement sharedHealth
+	//TODO: implement sharedLength
 	assert(moves.size() == state.getSnakes().size());
 	if (isGameOver(state))
 		return state;
 	std::vector<Snake> snakes;
 	bool foodChanged = false;
+	const auto snakeInfos = calcSnakeInfo(*this, state, moves);
+	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
+		const auto& snake = state.getSnake(i);
+		const auto& info = snakeInfos[i];
+		bool eaten = info.eaten;
+		bool dead = info.dead;
+		if (sharedHealth || sharedLength) {//FIXME: discriminate between those two
+			for (size_t j = 0; j < state.getSnakes().size(); ++j)
+				if (state.getSnake(j).getSquad() == snake.getSquad())
+					eaten |= snakeInfos[j].eaten;
+		}
+		if (sharedElimination) {
+			for (size_t j = 0; j < state.getSnakes().size(); ++j)
+				if (state.getSnake(j).getSquad() == snake.getSquad())
+					dead |= snakeInfos[j].dead;
+		}
+		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
+		foodChanged = foodChanged || info.eaten;
+	}
+	/*bool foodChanged = false;
 	for (size_t i = 0; i < state.getSnakes().size(); ++i) {
 		const auto& snake = state.getSnake(i);
 		const auto collisionMask = getCollisionMask(state, i);
@@ -54,7 +108,7 @@ State StandardGamemode::stepState(const State& state, const std::vector<Move>& m
 		const bool dead = starved || collision || headToHead;
 		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
 		foodChanged |= eaten;
-	}
+	}*/
 	if (foodChanged && !isGameOver(state)) {
 		Foods food = state.getFood().clone();
 		for (size_t i = 0; i < state.getSnakes().size(); ++i) {
