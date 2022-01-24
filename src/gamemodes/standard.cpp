@@ -40,7 +40,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 		const auto newHead = snake.getHeadPos().after_move(moves[i]);
 		const bool eaten = state.isFoodAt(newHead);
 		const bool starved = !eaten && snake.getHealth() <= 1;
-		const bool collision = state.isBlocked(newHead, collisionMask);
+		const bool collision = state.isBlocked(newHead, collisionMask, true);
 		bool headToHead = false;
 		for (size_t j = 0; j < state.getNumSnakes(); ++j) {
 			if (i != j) {

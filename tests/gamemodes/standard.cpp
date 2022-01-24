@@ -222,3 +222,32 @@ TEST_CASE("State COW 1 (food)", "[Gamemode Standard]") {
 		CHECK(next.getFood().__raw() != state1.getFood().__raw());
 	}
 }
+
+TEST_CASE("Move onto tail", "[Gamemode Standard]") {
+	/**
+	 * ╔═══════════╗	Snake 1:	<11
+	 * ║ 2 > 1 > . ║	Snake 2:	<22
+	 * ╚═══════════╝	Food:		o
+	 * 					Empty:		.
+	 */
+	const auto& gamemode = ls::gm::Standard;
+	std::vector<Position> snake1 = {{3,0},{2,0}};
+	std::vector<Position> snake2 = {{1,0},{0,0}};
+	std::vector<Position> food = {};
+	auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::ByIndex(0));
+	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::ByIndex(1));
+	auto state1 = State(5,1, {sdata1, sdata2}, std::move(food));
+
+	// Testcases:
+	// - Assert correct initialization
+	CHECK_FALSE(gamemode.isGameOver(state1));
+	CHECK(gamemode.getWinner(state1) == SnakeFlags::None);
+	CHECK((state1.getSnake(0).getDirection() == ls::Move::right));
+	CHECK((state1.getSnake(1).getDirection() == ls::Move::right));
+	CHECK_FALSE(state1.isBlocked({2,0}, gamemode.getCollisionMask(state1, 1), true));
+	{// - If snake1 and 2 move right: noone died
+		auto next = gamemode.stepState(state1, {Move::right, Move::right});
+		CHECK_FALSE(gamemode.isGameOver(next));
+		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
+	}
+}
