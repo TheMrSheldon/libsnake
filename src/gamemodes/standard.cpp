@@ -73,12 +73,12 @@ State StandardGamemode::stepState(const State& state, const std::vector<Move>& m
 		if (sharedHealth || sharedLength) {//FIXME: discriminate between those two
 			for (size_t j = 0; j < state.getNumSnakes(); ++j)
 				if (state.getSnake(j).getSquad() == snake.getSquad())
-					eaten |= snakeInfos[j].eaten;
+					eaten = eaten || snakeInfos[j].eaten;
 		}
 		if (sharedElimination) {
 			for (size_t j = 0; j < state.getNumSnakes(); ++j)
 				if (state.getSnake(j).getSquad() == snake.getSquad())
-					dead |= snakeInfos[j].dead;
+					dead = dead || snakeInfos[j].dead;
 		}
 		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
 		foodChanged = foodChanged || info.eaten;

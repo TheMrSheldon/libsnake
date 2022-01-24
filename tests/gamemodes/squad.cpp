@@ -134,3 +134,40 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)", "[G
 		CHECK(gamemode.getWinner(next) == SnakeFlags(SnakeFlags::Player1|SnakeFlags::Player2|SnakeFlags::Player3));
     }
 }
+
+TEST_CASE("Shared Length", "[Gamemode Squad -- length]") {
+	/**
+     * ╔═══════════╗	Snake 1:	<11
+     * ║ 1 > o . . ║	Snake 2:	<22
+     * ║ 2 > . . . ║	Snake 3:	<33
+     * ║ 3 > . . . ║	Food:		o
+     * ╚═══════════╝    Empty:      .
+     * Snake 1 and 2 are in the same squad.
+     */
+	auto gamemode = ls::gm::SquadGamemode();
+    gamemode.setAllowBodyCollisions(true);
+    gamemode.setSharedElimination(true);
+    gamemode.setSharedHealth(true);
+    gamemode.setSharedLength(true);
+	std::vector<Position> snake1 = {{1,2},{0,2}};
+	std::vector<Position> snake2 = {{1,1},{0,1}};
+	std::vector<Position> snake3 = {{1,0},{0,0}};
+	std::vector<Position> food = {{2,2}};
+    auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
+	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
+	auto sdata3 = Snake(std::move(snake3), 100, ls::SnakeFlags::Player3);
+	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, std::move(food));
+
+	{//If all snakes move right, snake 1 and 2 should have grown
+		auto next = gamemode.stepState(state1, {Move::right, Move::right, Move::right});
+		REQUIRE(next.getSnake(0).length() == 3);
+		REQUIRE(next.getSnake(1).length() == 3);
+		REQUIRE(next.getSnake(2).length() == 2);
+		CHECK(next.getSnake(0).getBody()[0] == Position(2,2));
+		CHECK(next.getSnake(0).getBody()[1] == Position(1,2));
+		CHECK(next.getSnake(0).getBody()[2] == Position(1,2));
+		CHECK(next.getSnake(1).getBody()[0] == Position(2,1));
+		CHECK(next.getSnake(1).getBody()[1] == Position(1,1));
+		CHECK(next.getSnake(1).getBody()[2] == Position(1,1));
+	}
+}
