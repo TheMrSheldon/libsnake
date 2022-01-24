@@ -4,8 +4,6 @@
 #include "../definitions.h"
 
 namespace ls::gm {
-	//FIXME: sharedElimination, sharedHealth, and sharedLength are currently not factored in when stepping the state
-	
 	class SquadGamemode final : public ls::gm::StandardGamemode {
 	public:
 		DLLEXPORT SquadGamemode() noexcept;
