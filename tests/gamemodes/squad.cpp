@@ -43,7 +43,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 	CHECK((state1.getPossibleActions(2) == (Move::down | Move::left | Move::up)));
 	CHECK(state1.getFood().size() == 0);
     CHECK((gamemode.getUnblockedActions(state1, 0) == (Move::right | Move::up)));
-    CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down | Move::up | Move::left)));
+    CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
     CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
     {//If snake1 and snake3 move up and snake2 moves down: only snake3 should be dead and snake1 and snake2 won
         auto next = gamemode.stepState(state1, {Move::up, Move::down, Move::up});
@@ -68,6 +68,13 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 		CHECK_FALSE(next.getSnake(1).isDead());
 		CHECK(next.getSnake(2).isDead());
 		CHECK(gamemode.getWinner(next) == SnakeFlags(SnakeFlags::Player1|SnakeFlags::Player2));
+    }
+    {//If snake1 moves up, snake2 moves up, snake3 moves left: only snake 2 should be dead and game not over
+        auto next = gamemode.stepState(state1, {Move::up, Move::up, Move::left});
+		CHECK_FALSE(gamemode.isGameOver(next));
+		CHECK_FALSE(next.getSnake(0).isDead());
+		CHECK(next.getSnake(1).isDead());
+		CHECK_FALSE(next.getSnake(2).isDead());
     }
 }
 
@@ -107,7 +114,7 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)", "[G
 	CHECK((state1.getPossibleActions(2) == (Move::down | Move::left | Move::up)));
 	CHECK(state1.getFood().size() == 0);
     CHECK((gamemode.getUnblockedActions(state1, 0) == (Move::right | Move::up)));
-    CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down | Move::up | Move::left)));
+    CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
     CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
     {//If snake1 and snake3 move up and snake2 moves down: only snake3 should be dead and snake1 and snake2 won
         auto next = gamemode.stepState(state1, {Move::up, Move::down, Move::up});
