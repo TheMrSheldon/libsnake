@@ -158,7 +158,7 @@ namespace ls {
 				newbody.emplace_back(body[i]);
 			if (hasEaten)
 				newbody.emplace_back(newbody[newbody.size()-1]);
-			return Snake(std::move(newbody), move, hasEaten? 100 : (health-healthDelta), squad);
+			return Snake(std::move(newbody), move, hasEaten? 100 : (health+healthDelta), squad);
 		}
 	};
 }
