@@ -12,19 +12,19 @@ using namespace ls::gm;
 StandardGamemode ls::gm::Standard;
 
 StandardGamemode::StandardGamemode() noexcept {}
+StandardGamemode::~StandardGamemode() noexcept {}
 
 bool StandardGamemode::isGameOver(const State& state) const noexcept {
-	return std::count_if(state.getSnakes().begin(), state.getSnakes().end(), [](const Snake& snake){return !snake.isDead();}) <= 1;
+	return state.getLivingSquads().size() <= 1;
 }
 
 SnakeFlags StandardGamemode::getWinner(const State& state) const noexcept {
-	SnakeFlags winner = SnakeFlags::FromTo(0, state.getNumSnakes());
-	for (size_t i = 0; i < state.getNumSnakes(); ++i) {
-		const auto& snake = state.getSnake(i);
-		if (!snake.isDead())
-			winner &= SnakeFlags::ByIndex(i);
-	}
-	return winner;
+	const auto& squads = state.getLivingSquads();
+	if (squads.empty()) //A tie between all snakes if noone is left alive
+		return SnakeFlags::FromTo(0, state.getNumSnakes());
+	else if (squads.size() == 1) //Return the squad that is last one standing
+		return *squads.begin();
+	return SnakeFlags::None; // Two or more squads are left alive thus noone won
 }
 
 struct SnakeInfo {
@@ -32,12 +32,18 @@ struct SnakeInfo {
 	inline constexpr SnakeInfo(SnakeInfo&& other) noexcept : eaten(other.eaten), dead(other.dead) {}
 	inline constexpr SnakeInfo(bool eaten, bool dead) noexcept : eaten(eaten), dead(dead) {}
 };
+static Position calcHeadPos(const StandardGamemode& gm, const State& state, const Snake& snake, const Move& move) {
+	const auto afterMove = snake.getHeadPos().after_move(move);
+	if (gm.isBoardWrapped())
+		return afterMove.mod(state.getWidth(), state.getHeight());
+	return afterMove;
+}
 static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const State& state, const std::vector<Move>& moves) noexcept {
 	std::vector<SnakeInfo> snakeInfos;
 	for (size_t i = 0; i < state.getNumSnakes(); ++i) {
 		const auto& snake = state.getSnake(i);
 		const auto collisionMask = gm.getCollisionMask(state, i);
-		const auto newHead = snake.getHeadPos().after_move(moves[i]);
+		const auto newHead = calcHeadPos(gm, state, snake, moves[i]);
 		const bool eaten = state.isFoodAt(newHead);
 		const bool starved = !eaten && snake.getHealth() <= 1;
 		const bool collision = state.isBlocked(newHead, collisionMask, true);
@@ -45,7 +51,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 		for (size_t j = 0; j < state.getNumSnakes(); ++j) {
 			if (i != j) {
 				const auto& otherSnake = state.getSnake(j);
-				const auto otherHead = otherSnake.getHeadPos().after_move(moves[j]);
+				const auto otherHead = calcHeadPos(gm, state, otherSnake, moves[j]);
 				if ((otherHead == newHead) && (snake.length() <= otherSnake.length())) {
 					headToHead = true;
 					break;
@@ -59,6 +65,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 }
 
 State StandardGamemode::stepState(const State& state, const std::vector<Move>& moves) const noexcept {
+	//TODO: simulate hazard development
 	assert(moves.size() == state.getNumSnakes());
 	if (isGameOver(state))
 		return state;
@@ -80,19 +87,20 @@ State StandardGamemode::stepState(const State& state, const std::vector<Move>& m
 				if (state.getSnake(j).getSquad() == snake.getSquad())
 					dead = dead || snakeInfos[j].dead;
 		}
-		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead));
+		const auto healthDelta = state.getFieldInfos().getHazard(snake.getHeadPos());
+		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead, healthDelta));
 		foodChanged = foodChanged || info.eaten;
 	}
 	if (foodChanged && !isGameOver(state)) {
-		Foods food = state.getFood().clone();
+		auto food = state.getFieldInfos().clone();
 		for (size_t i = 0; i < state.getNumSnakes(); ++i) {
-			const auto newPos = state.getSnake(i).getHeadPos().after_move(moves[i]);
+			const auto newPos = calcHeadPos(*this, state, state.getSnake(i), moves[i]);
 			if (state.isInBounds(newPos))
-				food.set(newPos, false);
+				food.setFood(newPos, false);
 		}
 		return State(state.getWidth(), state.getHeight(), std::move(snakes), std::move(food));
 	}
-	return State(state.getWidth(), state.getHeight(), std::move(snakes), state.getFood());
+	return State(state.getWidth(), state.getHeight(), std::move(snakes), state.getFieldInfos());
 }
 
 Move StandardGamemode::getUnblockedActions(const State& state, std::size_t snakeIdx) const noexcept {

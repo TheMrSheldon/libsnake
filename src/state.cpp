@@ -9,65 +9,69 @@
 
 using namespace ls;
 
-Foods::Foods(unsigned width, unsigned height) noexcept : width(width), height(height),
-	positions(std::make_shared<std::vector<uint8_t>>(width*height, false)) {}
-Foods::Foods(unsigned width, unsigned height, std::vector<Position> pos) noexcept : Foods(width, height) {
+FieldFlags::FieldFlags(unsigned width, unsigned height) noexcept : width(width), height(height),
+	positions(std::make_shared<std::vector<Field>>(width*height, Field{.food=false, .hazard=false})) {}
+FieldFlags::FieldFlags(unsigned width, unsigned height, const std::vector<Position>& pos, const std::vector<Position>& hazards) noexcept : FieldFlags(width, height) {
 	for (const auto& p : pos)
-		set(p.x, p.y, true);
+		setFood(p.x, p.y, true);
+	for (const auto& p : hazards)
+		setHazard(p.x, p.y, true);
 }
-void Foods::set(const Position& p, bool value) noexcept {
-	ASSERT(p.x < width, "The accessed x-coordinate may not exceed the width of the board.");
-	ASSERT(p.y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	set(p.x, p.y, value);
-}
-void Foods::set(unsigned x, unsigned y, bool value) noexcept {
+
+FieldFlags::Field& FieldFlags::get(unsigned x, unsigned y) noexcept {
 	ASSERT(x < width, "The accessed x-coordinate may not exceed the width of the board.");
 	ASSERT(y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	positions->at(y*width+x) = value;
+	return positions->at(y*width+x);
 }
-const bool Foods::get(unsigned x, unsigned y) const noexcept {
+FieldFlags::Field FieldFlags::get(unsigned x, unsigned y) const noexcept {
 	ASSERT(x < width, "The accessed x-coordinate may not exceed the width of the board.");
 	ASSERT(y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	return (*positions)[y*width + x];
+	return positions->at(y*width+x);
 }
-/*bool& Foods::operator[](const Position& pos) noexcept {
-	return get(pos.x, pos.y);
-}*/
-const bool Foods::operator[](const Position& pos) const noexcept {
-	ASSERT(pos.x < width, "The accessed x-coordinate may not exceed the width of the board.");
-	ASSERT(pos.y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	return get(pos.x, pos.y);
+
+void FieldFlags::setFood(const Position& p, bool value) noexcept {
+	setFood(p.x, p.y, value);
 }
-const size_t Foods::size() const noexcept {
-	return std::count_if(positions->begin(), positions->end(), [](const bool& b){return b;});
+void FieldFlags::setFood(unsigned x, unsigned y, bool value) noexcept {
+	get(x,y).food = value;
 }
-Foods Foods::clone() const noexcept {
-	Foods copy(width, height);
+const bool FieldFlags::getFood(const Position& p) const noexcept {
+	return get(p.x, p.y).food;
+}
+void FieldFlags::setHazard(const Position& p, bool value) noexcept {
+	setHazard(p.x, p.y, value);
+}
+void FieldFlags::setHazard(unsigned x, unsigned y, bool value) noexcept {
+	get(x,y).hazard = value;
+}
+const bool FieldFlags::getHazard(const Position& p) const noexcept {
+	return get(p.x, p.y).hazard;
+}
+const size_t FieldFlags::numFood() const noexcept {
+	return std::count_if(positions->begin(), positions->end(), [](const FieldFlags::Field& f){return f.food;});
+}
+FieldFlags FieldFlags::clone() const noexcept {
+	FieldFlags copy(width, height);
 	for (unsigned x = 0; x < width; ++x)
 		for (unsigned y = 0; y < height; ++y)
-			if (get(x,y))
-				copy.set(x, y, true);
+			copy.get(x,y) = get(x,y);
 	return std::move(copy);
 }
 
-State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(food) {
+State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const FieldFlags& fields) noexcept
+	: width(width), height(height), snakes(std::move(snakes)), fields(fields) {
 		for (const auto& snake : getSnakes())
 			if (!snake.isDead())
 				livingSquads.insert(snake.getSquad());
 	}
-State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(std::move(food)) {
+State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, FieldFlags&& fields) noexcept
+	: width(width), height(height), snakes(std::move(snakes)), fields(std::move(fields)) {
 		for (const auto& snake : getSnakes())
 			if (!snake.isDead())
 				livingSquads.insert(snake.getSquad());
 	}
-State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept
-	: width(width), height(height), snakes(std::move(snakes)), food(width, height, food) {
-		for (const auto& snake : getSnakes())
-			if (!snake.isDead())
-				livingSquads.insert(snake.getSquad());
-	}
+State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food, const std::vector<Position>& hazards) noexcept
+	: State(width, height, std::move(snakes), std::move(FieldFlags(width, height, food, hazards))) {};
 
 Move State::getPossibleActions(size_t snake) const noexcept {
 	auto& dir = snakes[snake].getDirection();
@@ -98,7 +102,7 @@ std::size_t State::getSnakeIndexAt(const Position& pos, bool ignoreTailtips) con
 }
 
 bool State::isFoodAt(const Position& pos) const noexcept {
-	return isInBounds(pos) && food[pos];
+	return isInBounds(pos) && fields.getFood(pos);
 }
 
 namespace ls {

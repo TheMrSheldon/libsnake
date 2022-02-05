@@ -17,8 +17,13 @@ namespace ls {
 	/**
 	 * @brief A datastructure that stores the food-positions.
 	 */
-	class Foods final {
+	class FieldFlags final {
 	private:
+		struct Field {
+			bool food : 1;
+			bool hazard : 1;
+		};
+
 		/**
 		 * @brief The width of the playarea.
 		 */
@@ -33,8 +38,10 @@ namespace ls {
 		 * is y*width + x. The vector is additionally stored in an std::shared_ptr to allow for copy-
 		 * on-write.
 		 */
-		std::shared_ptr<std::vector<uint8_t>> positions;
+		std::shared_ptr<std::vector<Field>> positions;
 
+		DLLEXPORT Field& get(unsigned x, unsigned y) noexcept;
+		DLLEXPORT Field get(unsigned x, unsigned y) const noexcept;
 	public:
 		/**
 		 * @brief Creates a new Foods object that stores the food-locations for a field of the specified
@@ -43,17 +50,20 @@ namespace ls {
 		 * @param width the width of the playarea.
 		 * @param height the height of the playarea.
 		 */
-		DLLEXPORT Foods(unsigned width, unsigned height) noexcept;
-		DLLEXPORT Foods(unsigned width, unsigned height, std::vector<Position> pos) noexcept;
-		DLLEXPORT void set(const Position& p, bool value) noexcept;
-		DLLEXPORT void set(unsigned x, unsigned y, bool value) noexcept;
-		DLLEXPORT const bool get(unsigned x, unsigned y) const noexcept;
-		//DLLEXPORT bool& operator[](const Position& pos) noexcept;
-		DLLEXPORT const bool operator[](const Position& pos) const noexcept;
-		DLLEXPORT const size_t size() const noexcept;
-		DLLEXPORT Foods clone() const noexcept;
+		DLLEXPORT FieldFlags(unsigned width, unsigned height) noexcept;
+		DLLEXPORT FieldFlags(unsigned width, unsigned height, const std::vector<Position>& pos, const std::vector<Position>& hazards) noexcept;
+		DLLEXPORT void setFood(const Position& p, bool value) noexcept;
+		DLLEXPORT void setFood(unsigned x, unsigned y, bool value) noexcept;
+		DLLEXPORT const bool getFood(const Position& p) const noexcept;
+		
+		DLLEXPORT void setHazard(const Position& p, bool value) noexcept;
+		DLLEXPORT void setHazard(unsigned x, unsigned y, bool value) noexcept;
+		DLLEXPORT const bool getHazard(const Position& p) const noexcept;
+		
+		DLLEXPORT const size_t numFood() const noexcept;
+		DLLEXPORT FieldFlags clone() const noexcept;
 
-		inline const std::vector<uint8_t>* __raw() const noexcept { return positions.get(); }
+		inline const std::vector<Field>* __raw() const noexcept { return positions.get(); }
 	};
 
 	/**
@@ -70,18 +80,24 @@ namespace ls {
 		 */
 		const unsigned height;
 		const std::vector<Snake> snakes;
-		const Foods food;
+		/**
+		 * @brief Stores information about fields and hazards.
+		 */
+		const FieldFlags fields;
 		std::set<ls::SnakeFlags> livingSquads;
+		const std::vector<bool> hazards;
 		
 	public:
-		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)), food(std::move(other.food)), livingSquads(std::move(other.livingSquads)) {}
-		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), food(other.food), livingSquads(other.livingSquads) {}
-		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food) noexcept;
-		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const Foods& food) noexcept;
-		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, Foods&& food) noexcept;
+		DLLEXPORT State(State&& other) noexcept : width(other.width), height(other.height), snakes(std::move(other.snakes)),
+													fields(std::move(other.fields)), livingSquads(std::move(other.livingSquads)) {}
+		DLLEXPORT State(const State& other) noexcept : width(other.width), height(other.height), snakes(other.snakes), fields(other.fields),
+													livingSquads(other.livingSquads) {}
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const std::vector<Position>& food, const std::vector<Position>& hazards) noexcept;
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const FieldFlags& fields) noexcept;
+		DLLEXPORT State(unsigned width, unsigned height, std::vector<Snake>&& snakes, FieldFlags&& fields) noexcept;
 
 		DLLEXPORT Move getPossibleActions(size_t snake) const noexcept;
-
+		
 		/**
 		 * @brief Returns the snake-data of this gamestate.
 		 * 
@@ -93,7 +109,7 @@ namespace ls {
 		 * 
 		 * @return The number of total snakes that parttake in the game (including dead snakes).
 		 */
-		inline constexpr std::size_t getNumSnakes() const noexcept { return snakes.size(); }
+		inline std::size_t getNumSnakes() const noexcept { return snakes.size(); }
 		inline const Snake& getSnake(std::size_t index) const noexcept { return snakes[index]; }
 		/**
 		 * @brief Returns the squads that have at least one living snake remaining within State::getSnakes().
@@ -101,7 +117,7 @@ namespace ls {
 		 * @return A set containing the squads that have at least one living snake remaining within State::getSnakes().
 		 */
 		inline const std::set<SnakeFlags>& getLivingSquads() const noexcept { return livingSquads; }
-		inline const Foods& getFood() const noexcept { return food; }
+		inline const FieldFlags& getFieldInfos() const noexcept { return fields; }
 		inline unsigned getWidth() const noexcept { return width; }
 		inline unsigned getHeight() const noexcept { return height; }
 		DLLEXPORT bool isInBounds(const Position& pos) const noexcept;
@@ -116,6 +132,7 @@ namespace ls {
 		DLLEXPORT bool isBlocked(const Position& pos, const SnakeFlags& mask, bool ignoreTailtips=false) const noexcept;
 		DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos, bool ignoreTailtips=false) const noexcept;
 		DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
+		DLLEXPORT bool isHazardAt(const Position& pos) const noexcept;
 
 		DLLEXPORT friend std::ostream& operator<<(std::ostream& os, const State& state) noexcept;
 

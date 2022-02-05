@@ -16,10 +16,9 @@ TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {
 	const auto& gamemode = ls::gm::Standard;
 	std::vector<Position> snake1 = {{1,0},{2,0}};
 	std::vector<Position> snake2 = {{0,1},{0,2},{1,2}};
-	std::vector<Position> food = {};
 	auto sdata1 = Snake(std::move(snake1), Move::left, 100, ls::SnakeFlags::ByIndex(0));
 	auto sdata2 = Snake(std::move(snake2), Move::down, 100, ls::SnakeFlags::ByIndex(1));
-	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food));
+	auto state1 = State(3,3, {sdata1, sdata2}, {}, {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -29,7 +28,7 @@ TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {
 	CHECK(gamemode.getWinner(state1) == SnakeFlags::None);
 	CHECK(state1.getPossibleActions(0) == (Move::up | Move::left | Move::down));
 	CHECK(state1.getPossibleActions(1) == (Move::down | Move::left | Move::right));
-	CHECK(state1.getFood().size() == 0);
+	CHECK(state1.getFieldInfos().numFood() == 0);
 
 	//Check if getSnakeIndexAt works:
 	//Not ignoring tailtips
@@ -93,7 +92,7 @@ TEST_CASE("State progression 2 (food;starving)", "[Gamemode Standard]") {
 	std::vector<Position> food = {{2,0},{1,1}};
 	auto sdata1 = Snake(std::move(snake1), Move::left, 1, ls::SnakeFlags::ByIndex(0));
 	auto sdata2 = Snake(std::move(snake2), Move::down, 100, ls::SnakeFlags::ByIndex(1));
-	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food));
+	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food), {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -101,7 +100,7 @@ TEST_CASE("State progression 2 (food;starving)", "[Gamemode Standard]") {
 	CHECK(gamemode.getWinner(state1) == SnakeFlags::None);
 	CHECK((state1.getPossibleActions(0) == (Move::up | Move::left | Move::down)));
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::left | Move::right)));
-	CHECK(state1.getFood().size() == 2);
+	CHECK(state1.getFieldInfos().numFood() == 2);
 	{// - If snake1 moves left and snake2 moves right: Gameover (head to head collision)
 		auto next = gamemode.stepState(state1, {Move::left, Move::right});
 		CHECK(gamemode.isGameOver(next));
@@ -121,7 +120,7 @@ TEST_CASE("State progression 2 (food;starving)", "[Gamemode Standard]") {
 		auto next = gamemode.stepState(state1, {Move::down, Move::right});
 		CHECK(!gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
-		CHECK(next.getFood().size() == 0);
+		CHECK(next.getFieldInfos().numFood() == 0);
 		CHECK(next.getSnake(0).getHealth() == 100);
 		CHECK(next.getSnake(1).getHealth() == 100);
 		REQUIRE(next.getSnake(0).getBody().size() == 2);
@@ -142,10 +141,9 @@ TEST_CASE("State progression 3 (death by wall)", "[Gamemode Standard]") {
 	const auto& gamemode = ls::gm::Standard;
 	std::vector<Position> snake1 = {{2,0},{2,1}};
 	std::vector<Position> snake2 = {{0,2},{0,1}};
-	std::vector<Position> food = {};
 	auto sdata1 = Snake(std::move(snake1), Move::down, 100, ls::SnakeFlags::ByIndex(0));
 	auto sdata2 = Snake(std::move(snake2), Move::up, 100, ls::SnakeFlags::ByIndex(1));
-	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food));
+	auto state1 = State(3,3, {sdata1, sdata2}, {}, {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -153,7 +151,7 @@ TEST_CASE("State progression 3 (death by wall)", "[Gamemode Standard]") {
 	CHECK(gamemode.getWinner(state1) == SnakeFlags::None);
 	CHECK(state1.getPossibleActions(0) == (Move::down | Move::left | Move::right));
 	CHECK(state1.getPossibleActions(1) == (Move::up | Move::left | Move::right));
-	CHECK(state1.getFood().size() == 0);
+	CHECK(state1.getFieldInfos().numFood() == 0);
 	{// - If snake1 moves right and snake2 moves right: Gameover (snake1 ran into a wall)
 		auto next = gamemode.stepState(state1, {Move::right, Move::right});
 		CHECK(gamemode.isGameOver(next));
@@ -198,7 +196,7 @@ TEST_CASE("State COW 1 (food)", "[Gamemode Standard]") {
 	std::vector<Position> food = {{2,0},{1,1}};
 	auto sdata1 = Snake(std::move(snake1), Move::left, 100, ls::SnakeFlags::ByIndex(0));
 	auto sdata2 = Snake(std::move(snake2), Move::down, 100, ls::SnakeFlags::ByIndex(1));
-	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food));
+	auto state1 = State(3,3, {sdata1, sdata2}, std::move(food), {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -206,20 +204,20 @@ TEST_CASE("State COW 1 (food)", "[Gamemode Standard]") {
 	CHECK(gamemode.getWinner(state1) == SnakeFlags::None);
 	CHECK((state1.getPossibleActions(0) == (Move::up | Move::left | Move::down)));
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::left | Move::right)));
-	CHECK(state1.getFood().size() == 2);
+	CHECK(state1.getFieldInfos().numFood() == 2);
 	{// - If snake1 moves up and snake2 moves down: cow should not create a new food-list
 		auto next = gamemode.stepState(state1, {Move::up, Move::down});
 		CHECK(!gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
-		CHECK(next.getFood().__raw() == state1.getFood().__raw());
+		CHECK(next.getFieldInfos().__raw() == state1.getFieldInfos().__raw());
 	}
 	{// - If snake1 moves left and snake2 moves up: cow should have created a modified copy of food-list
 		auto next = gamemode.stepState(state1, {Move::left, Move::down});
 		CHECK(!gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
-		CHECK(next.getFood().size() == 1);
-		CHECK(state1.getFood().size() == 2); //Should be unaffected
-		CHECK(next.getFood().__raw() != state1.getFood().__raw());
+		CHECK(next.getFieldInfos().numFood() == 1);
+		CHECK(state1.getFieldInfos().numFood() == 2); //Should be unaffected
+		CHECK(next.getFieldInfos().__raw() != state1.getFieldInfos().__raw());
 	}
 }
 
@@ -233,10 +231,9 @@ TEST_CASE("Move onto tail", "[Gamemode Standard]") {
 	const auto& gamemode = ls::gm::Standard;
 	std::vector<Position> snake1 = {{3,0},{2,0}};
 	std::vector<Position> snake2 = {{1,0},{0,0}};
-	std::vector<Position> food = {};
 	auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::ByIndex(0));
 	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::ByIndex(1));
-	auto state1 = State(5,1, {sdata1, sdata2}, std::move(food));
+	auto state1 = State(5,1, {sdata1, sdata2}, {}, {});
 
 	// Testcases:
 	// - Assert correct initialization

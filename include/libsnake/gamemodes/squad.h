@@ -7,24 +7,7 @@ namespace ls::gm {
 	class SquadGamemode final : public ls::gm::StandardGamemode {
 	public:
 		DLLEXPORT SquadGamemode() noexcept;
-		/**
-		 * @brief A game in squad-mode is over iff there is at most one squad remaining.
-		 * 
-		 * @param state The state for which to check if it is gameover.
-		 * @return true iff the provided gamestate is gameover in squad-mode. 
-		 */
-		DLLEXPORT bool isGameOver(const State& state) const noexcept override;
-		/**
-		 * @brief Returns the winner of the match.
-		 * @details Returns the winner of the match. If the game is not over (two or more squads alive)
-		 * SnakeFlags::None is returned. If the game is a tie (all squads eliminated) all snakes are winners.
-		 * If a single squad is left alive, the snakes in this squad are the winners. It may be that one snake
-		 * from the squad has died and thus is the winner without being alive to see the day.
-		 * 
-		 * @param state The state for which to determine the winner.
-		 * @return The winner of the match. 
-		 */
-		DLLEXPORT SnakeFlags getWinner(const State& state) const noexcept override;
+		DLLEXPORT virtual ~SquadGamemode() noexcept override;
 		/**
 		 * @brief Returns flags indicating with which snakes this snake collides.
 		 * @details The snake collision in squad-mode depends on the ruleset. If body collisions between

@@ -25,11 +25,10 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 	std::vector<Position> snake1 = {{1,0},{0,0}};
 	std::vector<Position> snake2 = {{2,1},{3,1},{3,2},{2,2},{1,2},{1,1},{0,1}};
 	std::vector<Position> snake3 = {{3,0},{4,0}};
-	std::vector<Position> food = {};
     auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata3 = Snake(std::move(snake3), 100, ls::SnakeFlags::Player3);
-	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, std::move(food));
+	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, {}, {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -41,7 +40,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 	CHECK((state1.getPossibleActions(0) == (Move::right | Move::up | Move::down)));
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::up | Move::left)));
 	CHECK((state1.getPossibleActions(2) == (Move::down | Move::left | Move::up)));
-	CHECK(state1.getFood().size() == 0);
+	CHECK(state1.getFieldInfos().numFood() == 0);
     CHECK((gamemode.getUnblockedActions(state1, 0) == (Move::right | Move::up)));
     CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
     CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
@@ -96,11 +95,10 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)", "[G
 	std::vector<Position> snake1 = {{1,0},{0,0}};
 	std::vector<Position> snake2 = {{2,1},{3,1},{3,2},{2,2},{1,2},{1,1},{0,1}};
 	std::vector<Position> snake3 = {{3,0},{4,0}};
-	std::vector<Position> food = {};
     auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata3 = Snake(std::move(snake3), 100, ls::SnakeFlags::Player3);
-	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, std::move(food));
+	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, {}, {});
 
 	// Testcases:
 	// - Assert correct initialization
@@ -112,7 +110,7 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)", "[G
 	CHECK((state1.getPossibleActions(0) == (Move::right | Move::up | Move::down)));
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::up | Move::left)));
 	CHECK((state1.getPossibleActions(2) == (Move::down | Move::left | Move::up)));
-	CHECK(state1.getFood().size() == 0);
+	CHECK(state1.getFieldInfos().numFood() == 0);
     CHECK((gamemode.getUnblockedActions(state1, 0) == (Move::right | Move::up)));
     CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
     CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
@@ -163,7 +161,7 @@ TEST_CASE("Shared Length", "[Gamemode Squad -- length]") {
     auto sdata1 = Snake(std::move(snake1), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata2 = Snake(std::move(snake2), 100, ls::SnakeFlags::Player1 | ls::SnakeFlags::Player2);
 	auto sdata3 = Snake(std::move(snake3), 100, ls::SnakeFlags::Player3);
-	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, std::move(food));
+	auto state1 = State(5,3, {sdata1, sdata2, sdata3}, std::move(food), {});
 
 	{//If all snakes move right, snake 1 and 2 should have grown
 		auto next = gamemode.stepState(state1, {Move::right, Move::right, Move::right});

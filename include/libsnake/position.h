@@ -82,6 +82,10 @@ namespace ls {
 			return Position(x + move.deltaX(), y + move.deltaY());
 		}
 
+		inline Position mod(int modx, int mody) const noexcept {
+			return Position(x%modx, y%mody);
+		}
+
 		/**
 		 * @brief Componentwise clamps this position to the coordinates of \p min and \p max.
 		 * 

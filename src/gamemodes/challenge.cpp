@@ -10,6 +10,7 @@ using namespace ls::gm;
 ChallengeGamemode ls::gm::Challenge;
 
 ChallengeGamemode::ChallengeGamemode() noexcept {}
+ChallengeGamemode::~ChallengeGamemode() noexcept {}
 
 bool ChallengeGamemode::isGameOver(const State& state) const noexcept {
     //The challenge gamemodes should be played solo. As such the game is over if "any" snake is dead.
