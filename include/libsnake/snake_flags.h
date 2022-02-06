@@ -15,16 +15,43 @@ namespace ls {
         using primitive = uint8_t;
 		primitive flags;
 	public:
+		/**
+		 * @brief The SnakeFlags representing no player.
+		 */
         constexpr static primitive None = 0;
+		/**
+		 * @brief The SnakeFlags representing the player at index 0.
+		 */
 		constexpr static primitive Player1 = 1<<0;
+		/**
+		 * @brief The SnakeFlags representing the player at index 1.
+		 */
 		constexpr static primitive Player2 = 1<<1;
+		/**
+		 * @brief The SnakeFlags representing the player at index 2.
+		 */
 		constexpr static primitive Player3 = 1<<2;
+		/**
+		 * @brief The SnakeFlags representing the player at index 3.
+		 */
 		constexpr static primitive Player4 = 1<<3;
+		/**
+		 * @brief The SnakeFlags representing the player at index 4.
+		 */
 		constexpr static primitive Player5 = 1<<4;
+		/**
+		 * @brief The SnakeFlags representing the player at index 5.
+		 */
 		constexpr static primitive Player6 = 1<<5;
+		/**
+		 * @brief The SnakeFlags representing the player at index 6.
+		 */
 		constexpr static primitive Player7 = 1<<6;
+		/**
+		 * @brief The SnakeFlags representing the player at index 7.
+		 */
 		constexpr static primitive Player8 = 1<<7;
-
+		
         constexpr inline SnakeFlags(primitive flags = None) noexcept : flags(flags) {}
 		constexpr inline bool containsAny(primitive snakes) const noexcept {
 			return (flags & snakes) != None;
@@ -54,10 +81,20 @@ namespace ls {
 			return SnakeFlags(flags | other.flags);
 		}
 
+		/**
+		 * @brief Inverts the flags.
+		 * 
+		 * @return An instance with the inverted flags set. 
+		 */
 		constexpr inline SnakeFlags operator~() const noexcept {
 			return SnakeFlags(~flags);
 		}
 
+		/**
+		 * @brief Counts the number of bits set.
+		 * 
+		 * @return The number of bits set.
+		 */
 		constexpr inline size_t size() const noexcept {
 			return containsAny(Player1) + containsAny(Player2) + containsAny(Player3) + containsAny(Player4) +
 				containsAny(Player5) + containsAny(Player6) + containsAny(Player7) + containsAny(Player8);
@@ -71,6 +108,12 @@ namespace ls {
 			ASSERT(false, "No index found");
 		}
 
+		/**
+		 * @brief Casts the snake instance to an integer in which the i-th bit is set iff the player at index i
+		 * is part of this snake flags instance.
+		 * 
+		 * @return The integer representing this flag instance.
+		 */
 		constexpr operator primitive() const noexcept {
 			return flags;
 		}

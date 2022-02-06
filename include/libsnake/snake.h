@@ -142,18 +142,19 @@ namespace ls {
 		 * eaten the returned snake has 100 health (max health) and is longer by one element.
 		 * 
 		 * @param move The direction the snake moves in.
+		 * @param head The new position of the head.
 		 * @param hasEaten True iff the snake has eaten while moving in the direction of \p move.
 		 * @param dead True iff the snake has died while moving in the direction of \p move.
 		 * @param healthDelta The difference to the snakes health in the next turn. Ignored if \p hasEaten is set to true.
 		 * @return The next snake-state after this snake was moved in direction \p move.
 		 */
-		inline Snake afterMove(const Move& move, bool hasEaten, bool dead, int healthDelta) const noexcept {
+		inline Snake afterMove(const Move& move, Position head, bool hasEaten, bool dead, int healthDelta) const noexcept {
 			if (dead)
 				return Snake(std::vector<Position>(1, Position(-1, -1)), move, 0, squad);
 			const std::size_t newLength = body.size() + hasEaten;
 			std::vector<Position> newbody;
 			newbody.reserve(newLength);
-			newbody.emplace_back(getHeadPos().after_move(move));
+			newbody.emplace_back(head);
 			for (std::size_t i = 0; i < body.size()-1; ++i)
 				newbody.emplace_back(body[i]);
 			if (hasEaten)

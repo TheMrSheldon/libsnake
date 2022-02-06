@@ -29,8 +29,9 @@ SnakeFlags StandardGamemode::getWinner(const State& state) const noexcept {
 
 struct SnakeInfo {
 	bool eaten, dead;
-	inline constexpr SnakeInfo(SnakeInfo&& other) noexcept : eaten(other.eaten), dead(other.dead) {}
-	inline constexpr SnakeInfo(bool eaten, bool dead) noexcept : eaten(eaten), dead(dead) {}
+	Position head;
+	inline SnakeInfo(SnakeInfo&& other) noexcept : eaten(other.eaten), dead(other.dead), head(other.head) {}
+	inline SnakeInfo(bool eaten, bool dead, Position head) noexcept : eaten(eaten), dead(dead), head(head) {}
 };
 static Position calcHeadPos(const StandardGamemode& gm, const State& state, const Snake& snake, const Move& move) {
 	const auto afterMove = snake.getHeadPos().after_move(move);
@@ -59,7 +60,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode& gm, const St
 			}
 		}
 		const bool dead = starved || collision || headToHead;
-		snakeInfos.emplace_back(SnakeInfo(eaten, dead));
+		snakeInfos.emplace_back(SnakeInfo(eaten, dead, newHead));
 	}
 	return std::move(snakeInfos);
 }
@@ -87,8 +88,8 @@ State StandardGamemode::stepState(const State& state, const std::vector<Move>& m
 				if (state.getSnake(j).getSquad() == snake.getSquad())
 					dead = dead || snakeInfos[j].dead;
 		}
-		const auto healthDelta = state.getFieldInfos().getHazard(snake.getHeadPos())? -16:-1;
-		snakes.emplace_back(snake.afterMove(moves[i], eaten, dead, healthDelta));
+		const auto healthDelta = state.isHazardAt(info.head)? -16:-1;
+		snakes.emplace_back(snake.afterMove(moves[i], info.head, eaten, dead, healthDelta));
 		foodChanged = foodChanged || info.eaten;
 	}
 	if (foodChanged && !isGameOver(state)) {
@@ -108,7 +109,7 @@ Move StandardGamemode::getUnblockedActions(const State& state, std::size_t snake
 	const auto& snake = state.getSnake(snakeIdx);
 	const auto collisionMask = getCollisionMask(state, snakeIdx);
 	for (const auto& move : state.getPossibleActions(snakeIdx))
-		if (!state.isBlocked(snake.getHeadPos().after_move(move), collisionMask, true))
+		if (!state.isBlocked(calcHeadPos(*this, state, snake, move), collisionMask, true))
 			ret |= move;
 	return ret;
 }

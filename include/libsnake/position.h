@@ -83,7 +83,7 @@ namespace ls {
 		}
 
 		inline Position mod(int modx, int mody) const noexcept {
-			return Position(x%modx, y%mody);
+			return Position((x%modx + modx)%modx, (y%mody + mody)%mody);
 		}
 
 		/**

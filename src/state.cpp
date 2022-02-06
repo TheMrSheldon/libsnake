@@ -104,6 +104,9 @@ std::size_t State::getSnakeIndexAt(const Position& pos, bool ignoreTailtips) con
 bool State::isFoodAt(const Position& pos) const noexcept {
 	return isInBounds(pos) && fields.getFood(pos);
 }
+bool State::isHazardAt(const Position& pos) const noexcept {
+	return isInBounds(pos) && fields.getHazard(pos);
+}
 
 namespace ls {
 	std::ostream& operator<<(std::ostream& os, const State& state) noexcept {
