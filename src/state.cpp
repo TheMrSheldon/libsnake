@@ -107,6 +107,10 @@ bool State::isFoodAt(const Position& pos) const noexcept {
 bool State::isHazardAt(const Position& pos) const noexcept {
 	return isInBounds(pos) && fields.getHazard(pos);
 }
+void State::setHazardAt(const Position& pos, bool hazard) noexcept {
+	if (isInBounds(pos))
+		fields.setHazard(pos, hazard);
+}
 
 namespace ls {
 	std::ostream& operator<<(std::ostream& os, const State& state) noexcept {

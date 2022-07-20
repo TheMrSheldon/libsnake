@@ -83,7 +83,7 @@ namespace ls {
 		/**
 		 * @brief Stores information about fields and hazards.
 		 */
-		const FieldFlags fields;
+		FieldFlags fields;
 		std::set<ls::SnakeFlags> livingSquads;
 		const std::vector<bool> hazards;
 		
@@ -133,6 +133,7 @@ namespace ls {
 		DLLEXPORT std::size_t getSnakeIndexAt(const Position& pos, bool ignoreTailtips=false) const noexcept;
 		DLLEXPORT bool isFoodAt(const Position& pos) const noexcept;
 		DLLEXPORT bool isHazardAt(const Position& pos) const noexcept;
+		DLLEXPORT void setHazardAt(const Position& pos, bool hazard = true) noexcept;
 
 		DLLEXPORT friend std::ostream& operator<<(std::ostream& os, const State& state) noexcept;
 

@@ -12,6 +12,7 @@ namespace ls::gm {
 		bool sharedHealth = false;
 		bool sharedLength = false;
 		bool wrappedBoard = false;
+		int hazardPenalty = 16;
 	public:
 		DLLEXPORT StandardGamemode() noexcept;
 		DLLEXPORT virtual ~StandardGamemode() noexcept;
