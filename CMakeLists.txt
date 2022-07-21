@@ -34,7 +34,12 @@ if (BUILD_DOC)
 		set(DOXYGEN_USE_MDFILE_AS_MAINPAGE readme.md)
 		set(DOXYGEN_GENERATE_TREEVIEW YES)
 		
-		doxygen_add_docs(doxygen readme.md ${PROJECT_SOURCE_DIR}/include/libsnake/ ALL COMMENT "Generate documentation")
+		doxygen_add_docs(doxygen
+			readme.md
+			${PROJECT_SOURCE_DIR}/include/libsnake/
+			docs/
+			ALL
+			COMMENT "Generate documentation")
 	else()
 		message("No doxygen installation was found")
 	endif()
