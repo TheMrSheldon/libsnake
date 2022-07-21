@@ -10,10 +10,11 @@ add_executable(benchmarks
 	game_simulation.cpp
 )
 
+target_compile_definitions(benchmarks PRIVATE CATCH_CONFIG_ENABLE_BENCHMARKING)
 target_link_libraries(benchmarks PRIVATE libsnake Catch2::Catch2)
 target_compile_features(benchmarks PRIVATE cxx_std_20)
 
-add_test(NAME libsnakebenchmarks COMMAND benchmarks)
+#add_test(NAME libsnakebenchmarks COMMAND benchmarks)
 
 
 if (WIN32)
@@ -22,3 +23,4 @@ if (WIN32)
 		COMMAND_EXPAND_LISTS
 	)
 endif()
+add_custom_command(TARGET benchmarks POST_BUILD COMMAND $<TARGET_FILE:benchmarks>)
