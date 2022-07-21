@@ -1,4 +1,11 @@
 {
 	"C_Cpp.codeAnalysis.clangTidy.enabled": true,
-	"editor.rulers": [120]
+	"editor.rulers": [
+		120
+	],
+	"editor.tabSize": 2,
+	"files.associations": {
+		"iosfwd": "cpp",
+		"xlocbuf": "cpp"
+	}
 }
