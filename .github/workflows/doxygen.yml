@@ -7,6 +7,7 @@ on:
 
 jobs:
   documentation:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: mattnotmitt/doxygen-action@1.9.4
