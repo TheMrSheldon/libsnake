@@ -23,6 +23,12 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "libsnake", "index.html", [
+    [ "First Steps", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html", [
+      [ "Defining a snake", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md1", null ],
+      [ "Defining a gamestate", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md2", null ],
+      [ "Declaring the gamemode (and its settings)", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md3", null ],
+      [ "Simulating a step", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md4", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
