@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('md__home_runner_work_libsnake_libsnake
 <div class="title">First Steps </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md6"></a>
 Defining a snake</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;libsnake/snake.h&gt;</span></div>
 <div class="line"> </div>
@@ -106,7 +106,7 @@ Defining a snake</h1>
 <div class="line"><span class="keyword">auto</span> squad = ls::SnakeFlags::ByIndex(0);</div>
 <div class="line"> </div>
 <div class="line"><a class="code" href="classls_1_1Snake.html">ls::Snake</a> snake(body, health, squad);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
 Defining a gamestate</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;libsnake/state.h&gt;</span></div>
 <div class="line"> </div>
@@ -125,10 +125,10 @@ Defining a gamestate</h1>
 <div class="line">std::vector&lt;ls::Position&gt; hazards = {{4, 4}};</div>
 <div class="line"> </div>
 <div class="line"><a class="code" href="classls_1_1State.html">ls::State</a> state(width, height, {snake0, snake1}, std::move(food), std::move(hazards));</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Declaring the gamemode (and its settings)</h1>
 <div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> &amp;gamemode = ls::gm::Standard;</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
 Simulating a step</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;libsnake/gamemodes/standard.h&gt;</span></div>
 <div class="line"> </div>

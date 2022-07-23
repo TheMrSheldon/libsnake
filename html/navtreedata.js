@@ -23,11 +23,17 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "libsnake", "index.html", [
+    [ "What is libsnake?", "index.html#autotoc_md0", null ],
+    [ "Using libsnake within another CMake project", "index.html#autotoc_md1", null ],
+    [ "Building libsnake with VSCode (we highly recommend VSCode)", "index.html#autotoc_md2", [
+      [ "Prerequisite", "index.html#autotoc_md3", null ],
+      [ "Build process:", "index.html#autotoc_md4", null ]
+    ] ],
     [ "First Steps", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html", [
-      [ "Defining a snake", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md1", null ],
-      [ "Defining a gamestate", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md2", null ],
-      [ "Declaring the gamemode (and its settings)", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md3", null ],
-      [ "Simulating a step", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md4", null ]
+      [ "Defining a snake", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md6", null ],
+      [ "Defining a gamestate", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md7", null ],
+      [ "Declaring the gamemode (and its settings)", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md8", null ],
+      [ "Simulating a step", "md__home_runner_work_libsnake_libsnake_docs_first_steps.html#autotoc_md9", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],

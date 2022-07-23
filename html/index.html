@@ -81,11 +81,53 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
 <div class="title">libsnake Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a href="https://github.com/TheMrSheldon/libsnake/actions/workflows/cmake_tests.yml"><object type="image/svg+xml" data="https://github.com/TheMrSheldon/libsnake/actions/workflows/cmake_tests.yml/badge.svg" style="pointer-events: none;">Tests</object></a></p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+What is libsnake?</h1>
+<p>[TODO: Insert text here]</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Using libsnake within another CMake project</h1>
+<p>Adding libsnake to your CMake project is easy. Simply add the following lines to your CMake project where <code>mytarget</code> is the target you would like to link libsnake to. </p><div class="fragment"><div class="line">FetchContent_Declare(</div>
+<div class="line">    libsnake_lib</div>
+<div class="line">    GIT_REPOSITORY https://github.com/TheMrSheldon/libsnake.git</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(libsnake_lib)</div>
+<div class="line">FetchContent_GetProperties(libsnake_lib)</div>
+<div class="line">target_include_directories(mytarget PRIVATE ${libsnake_SOURCE_DIR}/include/)</div>
+<div class="line">target_link_libraries(mytarget PRIVATE libsnake)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+Building libsnake with VSCode (we highly recommend VSCode)</h1>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Prerequisite</h2>
+<ul>
+<li>CMake</li>
+<li>VSCode</li>
+<li>CMake Extension for VSCode</li>
+<li>Working C++ compiler</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Build process:</h2>
+<ol type="1">
+<li>Clone this repository</li>
+</ol>
+<ol type="1">
+<li>Open the cloned repository in VSCode</li>
+</ol>
+<ol type="1">
+<li>Ctrl+Shift+P and enter "CMake: Configure"</li>
+</ol>
+<ol type="1">
+<li>You may get asked to select a Kit: select your prefered compiler</li>
+</ol>
+<ol type="1">
+<li>Ctrl+Shift+P and enter "CMake: Build" </li>
+</ol>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
