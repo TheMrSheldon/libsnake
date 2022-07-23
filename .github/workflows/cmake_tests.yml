@@ -60,12 +60,12 @@ jobs:
         with:
           name: Catch2 Benchmark
           tool: 'catch2'
-          output-file-path: ./benchmark_result.txt
+          output-file-path: ./benchmark_results.txt
           github-token: ${{ secrets.GITHUB_TOKEN }}
           alert-threshold: '200%'
           comment-on-alert: true
           fail-on-alert: true
           auto-push: true
-          benchmark-data-dir-path: "benchmarks"
+          benchmark-data-dir-path: "bench"
 
       
