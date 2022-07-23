@@ -31,11 +31,11 @@ if (BUILD_DOC)
 		set(DOXYGEN_QUIET YES)
 		#set(DOXYGEN_EXTRACT_PRIVATE YES)
 		set(DOXYGEN_STRIP_FROM_PATH ./include/libsnake)
-		set(DOXYGEN_USE_MDFILE_AS_MAINPAGE readme.md)
+		set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
 		set(DOXYGEN_GENERATE_TREEVIEW YES)
 		
 		doxygen_add_docs(doxygen
-			readme.md
+			README.md
 			${PROJECT_SOURCE_DIR}/include/libsnake/
 			docs/
 			ALL
