@@ -49,7 +49,7 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config Release
       - name: Run Benchmarks
-        run: ./build/benchmarks/Release/benchmarks | tee ./benchmark_results.txt
+        run: ${{github.workspace}}/build/benchmarks/Release/benchmarks | tee ./benchmark_results.txt
       - name: publish doc
         uses: peaceiris/actions-gh-pages@v3 
         with:
