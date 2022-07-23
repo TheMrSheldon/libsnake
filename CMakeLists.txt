@@ -59,6 +59,7 @@ endif()
 # Benchmarking
 ##########################################################################################
 # Benchmarking only available if this is the main app
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
+option(BENCHMARKS "Build benchmarks" ON)
+if(BENCHMARKS)
 	add_subdirectory(benchmarks)
 endif()

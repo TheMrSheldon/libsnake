@@ -23,4 +23,3 @@ if (WIN32)
 		COMMAND_EXPAND_LISTS
 	)
 endif()
-add_custom_command(TARGET benchmarks POST_BUILD COMMAND $<TARGET_FILE:benchmarks>)

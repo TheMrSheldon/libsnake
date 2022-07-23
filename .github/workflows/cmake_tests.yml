@@ -45,17 +45,27 @@ jobs:
       - name: Install Doxygen
         run: sudo apt-get install -y doxygen
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build --config Release
+      - name: Run Benchmarks
+        run: ./build/benchmarks/Release/benchmarks | tee ./benchmark_results.txt
       - name: publish doc
         uses: peaceiris/actions-gh-pages@v3 
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/doc
+      - name: Store Benchmark Result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Catch2 Benchmark
+          tool: 'catch2'
+          output-file-path: ./benchmark_result.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          alert-threshold: '200%'
+          comment-on-alert: true
+          fail-on-alert: true
+          auto-push: true
+          benchmark-data-dir-path: "benchmarks"
 
       
