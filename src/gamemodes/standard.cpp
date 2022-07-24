@@ -85,7 +85,7 @@ State StandardGamemode::stepState(const State &state, uint32_t turn, const std::
 				if (state.getSnake(j).getSquad() == snake.getSquad())
 					dead = dead || snakeInfos[j].dead;
 		}
-		const auto healthDelta = state.isHazardAt(info.head) ? -hazardPenalty : -1;
+		const auto healthDelta = (state.isHazardAt(info.head) ? -hazardDamagePerTurn : 0)-1;
 		snakes.emplace_back(snake.afterMove(moves[i], info.head, eaten, dead, healthDelta));
 		foodChanged = foodChanged || info.eaten;
 	}

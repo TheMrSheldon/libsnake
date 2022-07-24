@@ -8,11 +8,16 @@ namespace ls::gm {
 
 	class StandardGamemode : public ls::Gamemode {
 	private:
+		bool wrappedBoard = false;
+		unsigned foodSpawnChance;
+		unsigned minimumFood;
+		unsigned hazardDamagePerTurn = 16;
+
+		// Squad only
 		bool sharedElimination = false;
 		bool sharedHealth = false;
 		bool sharedLength = false;
-		bool wrappedBoard = false;
-		int hazardPenalty = 16;
+		// End squad only
 
 	public:
 		/**
@@ -41,13 +46,24 @@ namespace ls::gm {
 
 		DLLEXPORT virtual SnakeFlags getCollisionMask(const State &state, std::size_t snakeIdx) const;
 
+		void setFoodSpawnChance(int value) noexcept { this->foodSpawnChance = value; }
+		unsigned getFoodSpawnChance() const noexcept { return this->foodSpawnChance; }
+		void setMinimumFood(int value) noexcept { this->minimumFood = value; }
+		unsigned getMinimumFood() const noexcept { return this->minimumFood; }
+		void setHazardDamagePerTurn(int value) noexcept { this->hazardDamagePerTurn = value; }
+		unsigned getHazardDamagePerTurn() const noexcept { return this->hazardDamagePerTurn; }
+
+		void setWrappedBoard(bool value) noexcept { this->wrappedBoard = value; }
+		bool isBoardWrapped() const noexcept { return this->wrappedBoard; }
+
+		// Squad only
 		void setSharedElimination(bool value) noexcept { this->sharedElimination = value; }
 		bool getSharedElimination() const noexcept { return this->sharedElimination; }
 		void setSharedHealth(bool value) noexcept { this->sharedHealth = value; }
 		bool getSharedHealth() const noexcept { return this->sharedHealth; }
 		void setSharedLength(bool value) noexcept { this->sharedLength = value; }
 		bool getSharedLength() const noexcept { return this->sharedLength; }
-		void setWrappedBoard(bool value) noexcept { this->wrappedBoard = value; }
-		bool isBoardWrapped() const noexcept { return this->wrappedBoard; }
+		// End squad only
+
 	};
 } // namespace ls::gm
