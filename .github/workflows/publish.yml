@@ -1,0 +1,43 @@
+name: Publish
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  publish_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen graphviz
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      - name: Run Benchmarks
+        run: ${{github.workspace}}/build/benchmarks/benchmarks | tee ./benchmark_results.txt
+      - name: publish doc/html
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/doc/html
+          destination_dir: ./doc/
+          enable_jekyll: true
+      - name: Store Benchmark Result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Catch2 Benchmark
+          tool: 'catch2'
+          output-file-path: ./benchmark_results.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          alert-threshold: '200%'
+          comment-on-alert: true
+          fail-on-alert: true
+          auto-push: true
+          benchmark-data-dir-path: "bench"
