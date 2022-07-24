@@ -1,0 +1,4 @@
+<map id="ls::gm::StandardGamemode" name="ls::gm::StandardGamemode">
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,209,107"/>
+<area shape="rect" id="node2" href="$classls_1_1Gamemode.html" title="The abstract Gamemode&#45;class should be implemented by the actual gamemodes according to their own game..." alt="" coords="49,5,166,32"/>
+</map>

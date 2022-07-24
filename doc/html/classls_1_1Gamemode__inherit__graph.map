@@ -1,0 +1,6 @@
+<map id="ls::Gamemode" name="ls::Gamemode">
+<area shape="rect" id="node1" title="The abstract Gamemode&#45;class should be implemented by the actual gamemodes according to their own game..." alt="" coords="163,5,280,32"/>
+<area shape="rect" id="node2" href="$classls_1_1gm_1_1StandardGamemode.html" title=" " alt="" coords="119,80,323,107"/>
+<area shape="rect" id="node3" href="$classls_1_1gm_1_1ChallengeGamemode.html" title=" " alt="" coords="5,155,216,181"/>
+<area shape="rect" id="node4" href="$classls_1_1gm_1_1SquadGamemode.html" title=" " alt="" coords="240,155,427,181"/>
+</map>
