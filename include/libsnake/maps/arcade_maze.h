@@ -8,7 +8,7 @@ namespace ls::map {
 	public:
 		virtual ~ArcadeMaze() = default;
 
-		virtual void setup(ls::State &state) const;
+		DLLEXPORT virtual void setup(ls::State &state) const;
 
 		virtual void update(ls::State &state, uint32_t turn) const {
 			/*

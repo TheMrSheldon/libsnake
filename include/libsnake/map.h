@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <string>
 
+#include "definitions.h"
 #include "state.h"
 
 namespace ls::map {
@@ -35,5 +36,5 @@ namespace ls::map {
 		virtual void update(ls::State &state, uint32_t turn) const = 0;
 	};
 
-	Map &getMap(const std::string &name);
+	DLLEXPORT Map &getMap(const std::string &name);
 } // namespace ls::map
