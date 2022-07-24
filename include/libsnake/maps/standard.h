@@ -9,11 +9,11 @@ namespace ls::map {
 	public:
 		virtual ~Standard() = default;
 		
-		virtual void setup(const ls::State& state) {
+		virtual void setup(ls::State& state) {
 			/* Nothing to be done here */
 		}
 
-		virtual void update(const ls::State& state) {
+		virtual void update(ls::State& state) {
 			/*
 				We would only place food randomly.
 				This is currently not simulated
