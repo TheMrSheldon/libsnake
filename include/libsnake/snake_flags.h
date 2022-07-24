@@ -63,6 +63,9 @@ namespace ls {
 		constexpr inline bool operator==(const primitive& other) const noexcept {
 			return other == flags;
 		}
+		constexpr inline bool operator==(const SnakeFlags& other) const noexcept {
+			return other.flags == flags;
+		}
 		constexpr inline bool operator!=(const primitive& other) const noexcept {
 			return other != flags;
 		}
