@@ -8,7 +8,6 @@ namespace ls::gm {
 
 	class StandardGamemode : public ls::Gamemode {
 	private:
-		bool allowBodyCollision = false;
 		bool sharedElimination = false;
 		bool sharedHealth = false;
 		bool sharedLength = false;
@@ -16,6 +15,11 @@ namespace ls::gm {
 		int hazardPenalty = 16;
 
 	public:
+		/**
+		 * @brief Initializes a new standard gamemode
+		 *
+		 * @param map the map to be used with this instance of the gamemode.
+		 */
 		DLLEXPORT StandardGamemode(const ls::map::Map &map) noexcept;
 		DLLEXPORT virtual ~StandardGamemode() noexcept;
 		DLLEXPORT bool isGameOver(const State &state) const noexcept override;
@@ -30,14 +34,13 @@ namespace ls::gm {
 		 * @return The winner of the match.
 		 */
 		DLLEXPORT SnakeFlags getWinner(const State &state) const noexcept override;
-		DLLEXPORT State stepState(const State &state, const std::vector<Move> &moves) const noexcept override;
+		DLLEXPORT State stepState(const State &state, uint32_t turn,
+															const std::vector<Move> &moves) const noexcept override;
 
 		DLLEXPORT Move getUnblockedActions(const State &state, std::size_t snakeIdx) const noexcept override;
 
 		DLLEXPORT virtual SnakeFlags getCollisionMask(const State &state, std::size_t snakeIdx) const;
 
-		void setAllowBodyCollisions(bool value) noexcept { this->allowBodyCollision = value; }
-		bool getAllowBodyCollisions() const noexcept { return this->allowBodyCollision; }
 		void setSharedElimination(bool value) noexcept { this->sharedElimination = value; }
 		bool getSharedElimination() const noexcept { return this->sharedElimination; }
 		void setSharedHealth(bool value) noexcept { this->sharedHealth = value; }

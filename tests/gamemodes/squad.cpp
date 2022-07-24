@@ -48,7 +48,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 	CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
 	CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
 	{ // If snake1 and snake3 move up and snake2 moves down: only snake3 should be dead and snake1 and snake2 won
-		auto next = gamemode.stepState(state1, {Move::up, Move::down, Move::up});
+		auto next = gamemode.stepState(state1, 0, {Move::up, Move::down, Move::up});
 		CHECK(gamemode.isGameOver(next));
 		CHECK_FALSE(next.getSnake(0).isDead());
 		CHECK_FALSE(next.getSnake(1).isDead());
@@ -56,7 +56,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 		CHECK(gamemode.getWinner(next) == SnakeFlags(SnakeFlags::Player1 | SnakeFlags::Player2));
 	}
 	{ // If snake1 moves right, snake2 moves down, snake3 moves left: snake1 and 2 win (snake1 and 3 died due to 2)
-		auto next = gamemode.stepState(state1, {Move::right, Move::down, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::right, Move::down, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(next.getSnake(0).isDead());
 		CHECK_FALSE(next.getSnake(1).isDead());
@@ -64,7 +64,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 		CHECK(gamemode.getWinner(next) == SnakeFlags(SnakeFlags::Player1 | SnakeFlags::Player2));
 	}
 	{ // If snake1 moves down, snake2 moves down, snake3 moves left: tie (snake1 ran into a wall and 3 died due to 2)
-		auto next = gamemode.stepState(state1, {Move::down, Move::down, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::down, Move::down, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(next.getSnake(0).isDead());
 		CHECK_FALSE(next.getSnake(1).isDead());
@@ -72,7 +72,7 @@ TEST_CASE("Squad (coll) - State progression 1 (no food)", "[Gamemode Squad -- co
 		CHECK(gamemode.getWinner(next) == SnakeFlags(SnakeFlags::Player1 | SnakeFlags::Player2));
 	}
 	{ // If snake1 moves up, snake2 moves up, snake3 moves left: only snake 2 should be dead and game not over
-		auto next = gamemode.stepState(state1, {Move::up, Move::up, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::up, Move::up, Move::left});
 		CHECK_FALSE(gamemode.isGameOver(next));
 		CHECK_FALSE(next.getSnake(0).isDead());
 		CHECK(next.getSnake(1).isDead());
@@ -119,7 +119,7 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)",
 	CHECK((gamemode.getUnblockedActions(state1, 1) == (Move::down)));
 	CHECK((gamemode.getUnblockedActions(state1, 2) == Move::left));
 	{ // If snake1 and snake3 move up and snake2 moves down: only snake3 should be dead and snake1 and snake2 won
-		auto next = gamemode.stepState(state1, {Move::up, Move::down, Move::up});
+		auto next = gamemode.stepState(state1, 0, {Move::up, Move::down, Move::up});
 		CHECK(gamemode.isGameOver(next));
 		CHECK_FALSE(next.getSnake(0).isDead());
 		CHECK_FALSE(next.getSnake(1).isDead());
@@ -128,7 +128,7 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)",
 	}
 	{ // If snake1 moves right, snake2 moves down, snake3 moves left: tie (snake1 and 3 died due to 2; 2 dies because 1
 		// died)
-		auto next = gamemode.stepState(state1, {Move::right, Move::down, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::right, Move::down, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(next.getSnake(0).isDead());
 		CHECK(next.getSnake(1).isDead());
@@ -137,7 +137,7 @@ TEST_CASE("Squad (coll;elim;health;length) - State progression 1 (no food)",
 	}
 	{ // If snake1 moves down, snake2 moves down, snake3 moves left: tie (snake1 ran into a wall and 3 died due to 2; 2
 		// dies because 1 died)
-		auto next = gamemode.stepState(state1, {Move::down, Move::down, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::down, Move::down, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(next.getSnake(0).isDead());
 		CHECK(next.getSnake(1).isDead());
@@ -170,7 +170,7 @@ TEST_CASE("Shared Length", "[Gamemode Squad -- length]") {
 	auto state1 = State(5, 3, {sdata1, sdata2, sdata3}, std::move(food), {});
 
 	{ // If all snakes move right, snake 1 and 2 should have grown
-		auto next = gamemode.stepState(state1, {Move::right, Move::right, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::right, Move::right, Move::right});
 		REQUIRE(next.getSnake(0).length() == 3);
 		REQUIRE(next.getSnake(1).length() == 3);
 		REQUIRE(next.getSnake(2).length() == 2);

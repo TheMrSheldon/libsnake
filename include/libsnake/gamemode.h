@@ -1,7 +1,7 @@
 #pragma once
 
-#include "state.h"
 #include "map.h"
+#include "state.h"
 
 #include <inttypes.h>
 #include <vector>
@@ -18,9 +18,8 @@ namespace ls {
 		 * @brief The map this gamemode is played on
 		 */
 		const ls::map::Map &map;
-		
-	private:
 
+	private:
 		/**
 		 * @brief Deleted sind gamemodes should not be copyable
 		 */
@@ -71,11 +70,12 @@ namespace ls {
 		 * in \p moves.
 		 *
 		 * @param state The state which should be stepped. The state itself will not be modified.
+		 * @param turn The number of turns played in the game.
 		 * @param moves The moves of each snake at the corresponding position in #ls::State::getSnakes().
 		 * 	As such \p moves should have exactly the same number of arguments as #ls::State::getSnakes().
 		 * @return The state after each of the moves were applied.
 		 */
-		virtual State stepState(const State &state, const std::vector<Move> &moves) const noexcept = 0;
+		virtual State stepState(const State &state, uint32_t turn, const std::vector<Move> &moves) const noexcept = 0;
 
 		/**
 		 * @brief Returns the move-flags of all the unblocked actions for the snake of the given index.

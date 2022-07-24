@@ -10,7 +10,7 @@ namespace ls::map {
 
 		virtual void setup(ls::State &state) const;
 
-		virtual void update(ls::State &state) const {
+		virtual void update(ls::State &state, uint32_t turn) const {
 			/*
 				We would only place food randomly.
 				This is currently not simulated

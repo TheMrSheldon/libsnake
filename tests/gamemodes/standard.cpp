@@ -57,7 +57,7 @@ TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {
 	CHECK(state1.getSnakeIndexAt({2, 2}, true) == 2);
 
 	{ // - If snake1 moves left and snake2 moves up: Gameover (head to head collision)
-		auto next = gamemode.stepState(state1, {Move::left, Move::down});
+		auto next = gamemode.stepState(state1, 0, {Move::left, Move::down});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(next.getSnake(0).isDead());
 		CHECK_FALSE(next.getSnake(1).isDead());
@@ -66,14 +66,14 @@ TEST_CASE("State progression 1 (no food)", "[Gamemode Standard]") {
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 moves down and snake2 moves right: Gameover (head to head collision)
-		auto next = gamemode.stepState(state1, {Move::up, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::up, Move::right});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player2);
 		// We don't care about how much food is left on the field since the game is now over
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 and snake2 move left: Gameover (snake2 ran into a wall)
-		auto next = gamemode.stepState(state1, {Move::left, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::left, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player1);
 		// We don't care about how much food is left on the field since the game is now over
@@ -105,14 +105,14 @@ TEST_CASE("State progression 2 (food;starving)", "[Gamemode Standard]") {
 	CHECK((state1.getPossibleActions(1) == (Move::down | Move::left | Move::right)));
 	CHECK(state1.getFieldInfos().numFood() == 2);
 	{ // - If snake1 moves left and snake2 moves right: Gameover (head to head collision)
-		auto next = gamemode.stepState(state1, {Move::left, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::left, Move::right});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player2);
 		// We don't care about how much food is left on the field since the game is now over
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 moves down and snake2 moves right: Gameover (snake1 starved)
-		auto next = gamemode.stepState(state1, {Move::up, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::up, Move::right});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player2);
 		// We don't care about how much food is left on the field since the game is now over
@@ -120,7 +120,7 @@ TEST_CASE("State progression 2 (food;starving)", "[Gamemode Standard]") {
 	}
 	{ // - If snake1 moves up and snake2 moves right: no food remaining and both snakes at 100 HP
 		// and longer by one.
-		auto next = gamemode.stepState(state1, {Move::down, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::down, Move::right});
 		CHECK(!gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
 		CHECK(next.getFieldInfos().numFood() == 0);
@@ -156,28 +156,28 @@ TEST_CASE("State progression 3 (death by wall)", "[Gamemode Standard]") {
 	CHECK(state1.getPossibleActions(1) == (Move::up | Move::left | Move::right));
 	CHECK(state1.getFieldInfos().numFood() == 0);
 	{ // - If snake1 moves right and snake2 moves right: Gameover (snake1 ran into a wall)
-		auto next = gamemode.stepState(state1, {Move::right, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::right, Move::right});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player2);
 		// We don't care about how much food is left on the field since the game is now over
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 moves up and snake2 moves right: Gameover (snake1 ran into a wall)
-		auto next = gamemode.stepState(state1, {Move::down, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::down, Move::right});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player2);
 		// We don't care about how much food is left on the field since the game is now over
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 and snake2 move left: Gameover (snake2 ran into a wall)
-		auto next = gamemode.stepState(state1, {Move::left, Move::left});
+		auto next = gamemode.stepState(state1, 0, {Move::left, Move::left});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player1);
 		// We don't care about how much food is left on the field since the game is now over
 		// and the implementation may optimize this case by ignoring the amount of food left.
 	}
 	{ // - If snake1 moves left and snake2 moves down: Gameover (snake2 ran into a wall)
-		auto next = gamemode.stepState(state1, {Move::left, Move::up});
+		auto next = gamemode.stepState(state1, 0, {Move::left, Move::up});
 		CHECK(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::Player1);
 		// We don't care about how much food is left on the field since the game is now over
@@ -207,7 +207,7 @@ TEST_CASE("Move onto tail", "[Gamemode Standard]") {
 	CHECK((state1.getSnake(1).getDirection() == ls::Move::right));
 	CHECK_FALSE(state1.isBlocked({2, 0}, gamemode.getCollisionMask(state1, 1), true));
 	{ // - If snake1 and 2 move right: noone died
-		auto next = gamemode.stepState(state1, {Move::right, Move::right});
+		auto next = gamemode.stepState(state1, 0, {Move::right, Move::right});
 		CHECK_FALSE(gamemode.isGameOver(next));
 		CHECK(gamemode.getWinner(next) == SnakeFlags::None);
 	}

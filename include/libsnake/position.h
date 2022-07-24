@@ -82,6 +82,13 @@ namespace ls {
 			return Position(x + move.deltaX(), y + move.deltaY());
 		}
 
+		/**
+		 * @brief Calculates the component wise modulus.
+		 * 
+		 * @param modx 
+		 * @param mody 
+		 * @return 
+		 */
 		inline Position mod(int modx, int mody) const noexcept {
 			return Position((x%modx + modx)%modx, (y%mody + mody)%mody);
 		}

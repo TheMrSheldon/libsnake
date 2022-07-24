@@ -62,7 +62,7 @@ static std::vector<SnakeInfo> calcSnakeInfo(const StandardGamemode &gm, const St
 	return std::move(snakeInfos);
 }
 
-State StandardGamemode::stepState(const State &state, const std::vector<Move> &moves) const noexcept {
+State StandardGamemode::stepState(const State &state, uint32_t turn, const std::vector<Move> &moves) const noexcept {
 	// TODO: simulate hazard development
 	assert(moves.size() == state.getNumSnakes());
 	if (isGameOver(state))
@@ -98,7 +98,7 @@ State StandardGamemode::stepState(const State &state, const std::vector<Move> &m
 		}
 	}
 	State next(state.getWidth(), state.getHeight(), std::move(snakes), std::move(fieldInfo));
-	map.update(next);
+	map.update(next, turn);
 	return next;
 }
 

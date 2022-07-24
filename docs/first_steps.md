@@ -63,5 +63,5 @@ const ls::Move& move0 = ls::Move::left; // Snake 0 moves left
 const ls::Move& move1 = ls::Move::up;   // Snake 1 moves up
 
 // Stepping the gamestate
-const auto nextState = gamemode.stepState(state, {move0, move1});
+const auto nextState = gamemode.stepState(state, 0, {move0, move1});
 ~~~~~~~~~~~~~

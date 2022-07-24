@@ -35,9 +35,9 @@ TEST_CASE("Standard Gamemode Benchmark") {
 	auto state = State(15, 10, {sdata1, sdata2}, std::move(food), {});
 
 	BENCHMARK("Progression"){
-		auto state1 = std::move(gamemode.stepState(state, {Move::up, Move::left}));
-		auto state2 = std::move(gamemode.stepState(state1, {Move::left, Move::left}));
-		auto state3 = std::move(gamemode.stepState(state2, {Move::up, Move::left}));
+		auto state1 = std::move(gamemode.stepState(state, 0, {Move::up, Move::left}));
+		auto state2 = std::move(gamemode.stepState(state1, 0, {Move::left, Move::left}));
+		auto state3 = std::move(gamemode.stepState(state2, 0, {Move::up, Move::left}));
 		return state3;
 	};
 }
