@@ -1,6 +1,7 @@
 #pragma once
 
 #include "state.h"
+#include "map.h"
 
 #include <inttypes.h>
 #include <vector>
@@ -12,7 +13,14 @@ namespace ls {
 	 * the next gamestate from a previous one and determining if the game is over and who won.
 	 */
 	class Gamemode {
+	protected:
+		/**
+		 * @brief The map this gamemode is played on
+		 */
+		const ls::map::Map &map;
+		
 	private:
+
 		/**
 		 * @brief Deleted sind gamemodes should not be copyable
 		 */
@@ -25,8 +33,10 @@ namespace ls {
 	protected:
 		/**
 		 * @brief Construct a new Gamemode object
+		 *
+		 * @param map
 		 */
-		Gamemode() noexcept = default;
+		Gamemode(const ls::map::Map &map) noexcept : map(map) {}
 
 	public:
 		/**

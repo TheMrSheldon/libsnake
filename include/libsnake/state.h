@@ -38,7 +38,7 @@ namespace ls {
 		 * is y*width + x. The vector is additionally stored in an std::shared_ptr to allow for copy-
 		 * on-write.
 		 */
-		std::shared_ptr<std::vector<Field>> positions;
+		std::vector<Field> positions;
 
 		DLLEXPORT Field& get(unsigned x, unsigned y) noexcept;
 		DLLEXPORT Field get(unsigned x, unsigned y) const noexcept;
@@ -61,9 +61,6 @@ namespace ls {
 		DLLEXPORT const bool getHazard(const Position& p) const noexcept;
 		
 		DLLEXPORT const size_t numFood() const noexcept;
-		DLLEXPORT FieldFlags clone() const noexcept;
-
-		inline const std::vector<Field>* __raw() const noexcept { return positions.get(); }
 	};
 
 	/**

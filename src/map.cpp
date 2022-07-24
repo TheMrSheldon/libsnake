@@ -23,7 +23,7 @@ static ls::map::HzGrowBox hzGrowBox;
 static ls::map::HzExpandBox hzExpandBox;
 static ls::map::HzExpandScatter hzExpandScatter;*/
 
-Map &createMap(const std::string &name) {
+Map &getMap(const std::string &name) {
 	static const std::map<std::string, std::reference_wrapper<Map>> maps{
 		{"standard", standard}, {"empty", empty}, {"arcade_maze", arcadeMaze},
 		/*{"royale", royale},

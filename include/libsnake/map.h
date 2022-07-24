@@ -10,8 +10,8 @@ namespace ls::map {
 
 	public:
 		virtual ~Map() = default;
-		virtual void setup(ls::State& state) = 0;
-		virtual void update(ls::State& state) = 0;
+		virtual void setup(ls::State& state) const = 0;
+		virtual void update(ls::State& state) const = 0;
 	};
 
 	Map& getMap(const std::string& name);

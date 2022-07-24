@@ -10,7 +10,7 @@
 using namespace ls;
 
 FieldFlags::FieldFlags(unsigned width, unsigned height) noexcept : width(width), height(height),
-	positions(std::make_shared<std::vector<Field>>(width*height, Field{.food=false, .hazard=false})) {}
+	positions(std::vector<Field>(width*height, Field{.food=false, .hazard=false})) {}
 FieldFlags::FieldFlags(unsigned width, unsigned height, const std::vector<Position>& pos, const std::vector<Position>& hazards) noexcept : FieldFlags(width, height) {
 	for (const auto& p : pos)
 		setFood(p.x, p.y, true);
@@ -21,12 +21,12 @@ FieldFlags::FieldFlags(unsigned width, unsigned height, const std::vector<Positi
 FieldFlags::Field& FieldFlags::get(unsigned x, unsigned y) noexcept {
 	ASSERT(x < width, "The accessed x-coordinate may not exceed the width of the board.");
 	ASSERT(y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	return positions->at(y*width+x);
+	return positions.at(y*width+x);
 }
 FieldFlags::Field FieldFlags::get(unsigned x, unsigned y) const noexcept {
 	ASSERT(x < width, "The accessed x-coordinate may not exceed the width of the board.");
 	ASSERT(y < height, "The accessed y-coordinate may not exceed the height of the board.");
-	return positions->at(y*width+x);
+	return positions.at(y*width+x);
 }
 
 void FieldFlags::setFood(const Position& p, bool value) noexcept {
@@ -48,14 +48,7 @@ const bool FieldFlags::getHazard(const Position& p) const noexcept {
 	return get(p.x, p.y).hazard;
 }
 const size_t FieldFlags::numFood() const noexcept {
-	return std::count_if(positions->begin(), positions->end(), [](const FieldFlags::Field& f){return f.food;});
-}
-FieldFlags FieldFlags::clone() const noexcept {
-	FieldFlags copy(width, height);
-	for (unsigned x = 0; x < width; ++x)
-		for (unsigned y = 0; y < height; ++y)
-			copy.get(x,y) = get(x,y);
-	return std::move(copy);
+	return std::count_if(positions.begin(), positions.end(), [](const FieldFlags::Field& f){return f.food;});
 }
 
 State::State(unsigned width, unsigned height, std::vector<Snake>&& snakes, const FieldFlags& fields) noexcept
