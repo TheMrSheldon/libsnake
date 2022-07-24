@@ -56,6 +56,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/doc/html
           destination_dir: ./doc/
+          enable_jekyll: true
       - name: Store Benchmark Result
         uses: benchmark-action/github-action-benchmark@v1
         with:
@@ -68,5 +69,3 @@ jobs:
           fail-on-alert: true
           auto-push: true
           benchmark-data-dir-path: "bench"
-
-      
