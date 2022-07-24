@@ -13,7 +13,16 @@ include(FetchContent)
 include(CTest)
 enable_testing()
 
-add_library(libsnake SHARED src/state.cpp src/snake_flags.cpp src/definitions.cpp src/gamemodes/standard.cpp src/gamemodes/challenge.cpp src/gamemodes/squad.cpp)
+add_library(libsnake SHARED
+	src/definitions.cpp
+	src/map.cpp
+	src/state.cpp
+	src/snake_flags.cpp
+	src/gamemodes/standard.cpp
+	src/gamemodes/challenge.cpp
+	src/gamemodes/squad.cpp
+	src/maps/arcade_maze.cpp
+)
 target_compile_features(libsnake PRIVATE cxx_std_20)
 target_compile_definitions(libsnake PRIVATE BUILD_SHARED)
 
