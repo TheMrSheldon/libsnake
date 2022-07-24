@@ -33,7 +33,7 @@ include_directories(PUBLIC include)
 ##########################################################################################
 option(BUILD_DOC "Build documentation" ON)
 
-if (BUILD_DOC)
+if (BUILD_DOC AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	find_package(Doxygen)
 	if (DOXYGEN_FOUND)
 		set(DOXYGEN_OUTPUT_DIRECTORY doc)
@@ -69,6 +69,6 @@ endif()
 ##########################################################################################
 # Benchmarking only available if this is the main app
 option(BENCHMARKS "Build benchmarks" ON)
-if(BENCHMARKS)
+if(BENCHMARKS AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	add_subdirectory(benchmarks)
 endif()
