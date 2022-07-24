@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658651164410,
+  "lastUpdate": 1658651617095,
   "repoUrl": "https://github.com/TheMrSheldon/libsnake",
   "entries": {
     "Catch2 Benchmark": [
@@ -79,6 +79,33 @@ window.BENCHMARK_DATA = {
             "name": "Progression",
             "value": 4.44824,
             "range": "± 398.262",
+            "unit": "us",
+            "extra": "100 samples\n8 iterations"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "TheMrSheldon",
+            "username": "TheMrSheldon"
+          },
+          "committer": {
+            "name": "TheMrSheldon",
+            "username": "TheMrSheldon"
+          },
+          "id": "49f453301294443d0cde725ccad6c655937c87ec",
+          "message": "Qualityoflife",
+          "timestamp": "2022-01-05T20:06:39Z",
+          "url": "https://github.com/TheMrSheldon/libsnake/pull/4/commits/49f453301294443d0cde725ccad6c655937c87ec"
+        },
+        "date": 1658651616656,
+        "tool": "catch2",
+        "benches": [
+          {
+            "name": "Progression",
+            "value": 3.70484,
+            "range": "± 70.2521",
             "unit": "us",
             "extra": "100 samples\n8 iterations"
           }
