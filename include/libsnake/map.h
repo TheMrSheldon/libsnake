@@ -36,5 +36,5 @@ namespace ls::map {
 		virtual void update(ls::State &state, uint32_t turn) const = 0;
 	};
 
-	DLLEXPORT Map &getMap(const std::string &name);
+	DLLEXPORT const Map *getMap(const std::string &name);
 } // namespace ls::map

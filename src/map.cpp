@@ -23,25 +23,21 @@ static ls::map::HzGrowBox hzGrowBox;
 static ls::map::HzExpandBox hzExpandBox;
 static ls::map::HzExpandScatter hzExpandScatter;*/
 
-Map &ls::map::getMap(const std::string &name) {
-	static const std::map<std::string, std::reference_wrapper<Map>> maps{
-		{"standard", standard}, {"empty", empty}, {"arcade_maze", arcadeMaze},
-		/*{"royale", royale},
-		{"solo_maze", soloMaze},
-		{"hz_inner_wall", hzInnerWall},
-		{"hz_rings", hzRings},
-		{"hz_columns", hzColumns},
-		{"hz_rivers_bridges", hzRiversBridges},
-		{"hz_spiral", hzSpiral},
-		{"hz_scatter", hzScatter},
-		{"hz_grow_box", hzGrowBox},
-		{"hz_expand_box", hzExpandBox},
-		{"hz_expand_scatter", hzExpandScatter},*/
+const Map *ls::map::getMap(const std::string &name) {
+	static const std::map<std::string, Map const *> maps{
+		{"standard", &standard}, {"empty", &empty}, {"arcade_maze", &arcadeMaze},
+		/*{"royale", &royale},
+		{"solo_maze", &soloMaze},
+		{"hz_inner_wall", &hzInnerWall},
+		{"hz_rings", &hzRings},
+		{"hz_columns", &hzColumns},
+		{"hz_rivers_bridges", &hzRiversBridges},
+		{"hz_spiral", &hzSpiral},
+		{"hz_scatter", &hzScatter},
+		{"hz_grow_box", &hzGrowBox},
+		{"hz_expand_box", &hzExpandBox},
+		{"hz_expand_scatter", &hzExpandScatter},*/
 	};
 	auto it = maps.find(name);
-	if (it == maps.end()) {
-		// TODO: log error
-		return standard;
-	}
-	return it->second.get();
+	return (it == maps.end())? nullptr : (it->second);
 }
