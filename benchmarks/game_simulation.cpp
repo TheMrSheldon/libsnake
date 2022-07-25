@@ -1,9 +1,12 @@
 #include <catch2/catch.hpp>
 
 #include <libsnake/gamemodes/standard.h>
+#include <libsnake/maps/empty.h>
 #include <libsnake/state.h>
 
 using namespace ls;
+
+static ls::map::Empty emptyMap;
 
 TEST_CASE("Standard Gamemode Benchmark") {
 	/**
@@ -21,7 +24,7 @@ TEST_CASE("Standard Gamemode Benchmark") {
 	 * ╚═══════════════════════════════╝
 	 */
 
-	const auto &gamemode = ls::gm::Standard;
+	const auto gamemode = ls::gm::StandardGamemode(emptyMap);
 	std::vector<Position> snake1 = {{6, 4},	 {6, 3},	{6, 2},	 {6, 1},	{7, 1},	 {8, 1},	{8, 2}, {9, 2},
 																	{10, 2}, {11, 2}, {12, 2}, {13, 2}, {13, 1}, {13, 0}, {12, 0}};
 	std::vector<Position> snake2 = {{9, 6},	 {10, 6}, {11, 6}, {11, 5}, {11, 4}, {12, 4}, {13, 4}, {13, 5},
@@ -32,9 +35,9 @@ TEST_CASE("Standard Gamemode Benchmark") {
 	auto state = State(15, 10, {sdata1, sdata2}, std::move(food), {});
 
 	BENCHMARK("Progression"){
-		auto state1 = std::move(gamemode.stepState(state, {Move::up, Move::left}));
-		auto state2 = std::move(gamemode.stepState(state1, {Move::left, Move::left}));
-		auto state3 = std::move(gamemode.stepState(state2, {Move::up, Move::left}));
+		auto state1 = std::move(gamemode.stepState(state, 0, {Move::up, Move::left}));
+		auto state2 = std::move(gamemode.stepState(state1, 0, {Move::left, Move::left}));
+		auto state3 = std::move(gamemode.stepState(state2, 0, {Move::up, Move::left}));
 		return state3;
 	};
 }

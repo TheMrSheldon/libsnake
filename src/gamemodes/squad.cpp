@@ -9,13 +9,12 @@
 using namespace ls;
 using namespace ls::gm;
 
-SquadGamemode ls::gm::Squad;
-
-SquadGamemode::SquadGamemode() noexcept {}
+SquadGamemode::SquadGamemode(const ls::map::Map &map) noexcept : StandardGamemode(map) {}
 SquadGamemode::~SquadGamemode() noexcept {}
 
-SnakeFlags SquadGamemode::getCollisionMask(const State& state, std::size_t snakeIdx) const noexcept {
+SnakeFlags SquadGamemode::getCollisionMask(const State &state, std::size_t snakeIdx) const noexcept {
 	if (getAllowBodyCollisions())
-		return ~state.getSnake(snakeIdx).getSquad() | SnakeFlags::ByIndex(snakeIdx); //toggle snakes belonging to my team off (but I still collide with myself)
-	return ~SnakeFlags::None; //Collide with all snakes
+		return ~state.getSnake(snakeIdx).getSquad() |
+					 SnakeFlags::ByIndex(snakeIdx); // toggle snakes belonging to my team off (but I still collide with myself)
+	return ~SnakeFlags::None;								// Collide with all snakes
 }

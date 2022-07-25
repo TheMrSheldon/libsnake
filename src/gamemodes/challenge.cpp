@@ -7,9 +7,7 @@
 using namespace ls;
 using namespace ls::gm;
 
-ChallengeGamemode ls::gm::Challenge;
-
-ChallengeGamemode::ChallengeGamemode() noexcept {}
+ChallengeGamemode::ChallengeGamemode(const ls::map::Map &map) noexcept : StandardGamemode(map) {}
 ChallengeGamemode::~ChallengeGamemode() noexcept {}
 
 bool ChallengeGamemode::isGameOver(const State& state) const noexcept {
